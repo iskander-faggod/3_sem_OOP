@@ -53,13 +53,10 @@ namespace Isu.Tests
         [Test]
         public void TransferStudentToAnotherGroup_GroupChanged()
         {
-            Assert.Catch<IsuException>(() =>
-            {
-                Group oldGroup = _isuService.AddGroup("M3108");
-                Group newGroup = _isuService.AddGroup("M3201");
-                _isuService.AddStudent(oldGroup, "Iskander");
-                _isuService.ChangeStudentGroup(_isuService.FindStudent("Iskander"), newGroup);
-            });
+            Group oldGroup = _isuService.AddGroup("M3108");
+            Group newGroup = _isuService.AddGroup("M3201");
+            _isuService.AddStudent(oldGroup, "Iskander");
+            _isuService.ChangeStudentGroup(_isuService.FindStudent("Iskander"), newGroup);
         }
     }
 }
