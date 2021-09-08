@@ -7,19 +7,16 @@ namespace Isu.Tools
     {
         public IsuException()
         {
-            throw new NotImplementedException();
         }
 
         public IsuException(string message)
             : base(message)
         {
-            throw new NotImplementedException(message);
         }
 
         public IsuException(string message, Exception innerException)
             : base(message, innerException)
         {
-            throw new Exception(message);
         }
 
         protected IsuException(SerializationInfo info, StreamingContext context)

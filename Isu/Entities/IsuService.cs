@@ -2,25 +2,28 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Isu.Classes;
 using Isu.Services;
+using Isu.Tools;
 
-namespace Isu.Classes
+namespace Isu.Entities
 {
     public class IsuService : IIsuService
     {
-        private readonly Dictionary<Group, List<Student>> _dictGroup;
         private int _id = 0;
+        private int _countOfStudents = 25;
 
         private IsuService(List<Student> listStudents, List<Group> listGroup, Dictionary<Group, List<Student>> dictGroup)
         {
-            this._dictGroup = dictGroup;
+            this.DictGroup = dictGroup;
         }
 
         private IsuService()
         {
-            this._dictGroup = new Dictionary<Group, List<Student>>();
+            this.DictGroup = new Dictionary<Group, List<Student>>();
         }
 
+        public Dictionary<Group, List<Student>> DictGroup { get; }
         public static IsuService CreateInstance(List<Student> listStudents, List<Group> listGroup, Dictionary<Group, List<Student>> dictGroup)
         {
             return new IsuService(listStudents, listGroup, dictGroup);
@@ -34,27 +37,26 @@ namespace Isu.Classes
         // Done
         public Group AddGroup(string name)
         {
-            Debug.Assert(name != null, nameof(name) + " != null");
-            if (name == null && string.IsNullOrEmpty(name) && (name.Length != 5))
+            if (string.IsNullOrEmpty(name) || (name.Length != 5))
             {
-                throw new System.NotImplementedException("Invalid group name");
+                throw new IsuException("Invalid group name");
             }
 
             if (!uint.TryParse(name[2].ToString(), out uint courseNumber))
             {
-                throw new System.NotImplementedException("Invalid course number");
+                throw new IsuException("Invalid course number");
             }
 
             if (!uint.TryParse(name.Substring(3, 2), out uint groupNumber))
             {
-                throw new System.NotImplementedException("Invalid group number");
+                throw new IsuException("Invalid group number");
             }
 
             var newGroup = Group.CreateInstance(groupNumber, CourseNumber.CreateInstance(courseNumber));
             var studentsList = new List<Student>();
 
-            if (_dictGroup.ContainsKey(newGroup)) return newGroup;
-            _dictGroup.Add(newGroup, studentsList);
+            if (DictGroup.ContainsKey(newGroup)) return newGroup;
+            DictGroup.Add(newGroup, studentsList);
 
             return newGroup;
         }
@@ -64,24 +66,24 @@ namespace Isu.Classes
         {
             if (string.IsNullOrWhiteSpace(name))
             {
-                throw new System.NotImplementedException("Invalid student name");
+                throw new IsuException("Invalid student name");
             }
 
-            if ((@group.GroupNumber > 20) || @group.Number.Number is > 4 or 0)
+            if (@group.Number.Number is > 4 or 0)
             {
-                throw new System.NotImplementedException("Invalid group");
+                throw new IsuException("Invalid group");
             }
 
-            if (_dictGroup[group].Count > 25)
+            if (DictGroup[group].Count > _countOfStudents)
             {
-                throw new System.NotImplementedException("Can't add student to group, group is full");
+                throw new IsuException("Can't add student to group, group is full");
             }
 
             ++_id;
             var student = Student.CreateInstance(name, _id);
-            List<Student> studentsList = _dictGroup[group];
+            List<Student> studentsList = DictGroup[group];
             if (studentsList.Contains(student)) return student;
-            _dictGroup[group].Add(student);
+            DictGroup[group].Add(student);
             return student;
         }
 
@@ -90,11 +92,11 @@ namespace Isu.Classes
         {
             if (id < 1)
             {
-                throw new System.NotImplementedException("Invalid id");
+                throw new IsuException("Invalid id");
             }
 
             var currentStudent = Student.CreateInstance("name", id);
-            foreach (Student student in _dictGroup.Values.SelectMany(students => students.Where(student => student.Id == id)))
+            foreach (Student student in DictGroup.Values.SelectMany(students => students.Where(student => student.Id == id)))
             {
                 currentStudent.Id = student.Id;
                 currentStudent.Name = student.Name;
@@ -107,11 +109,11 @@ namespace Isu.Classes
         {
             if (string.IsNullOrEmpty(name))
             {
-                throw new System.NotImplementedException("Invalid name");
+                throw new IsuException("Invalid name");
             }
 
             var currentStudent = Student.CreateInstance(name, 0);
-            foreach (Student student in _dictGroup.Values.SelectMany(students => students.Where(student => student.Name == name)))
+            foreach (Student student in DictGroup.Values.SelectMany(students => students.Where(student => student.Name == name)))
             {
                 currentStudent.Id = student.Id;
                 currentStudent.Name = student.Name;
@@ -124,60 +126,60 @@ namespace Isu.Classes
         {
             if (string.IsNullOrWhiteSpace(groupName) || groupName.Length is > 5 or <= 0)
             {
-                throw new NotImplementedException("Invalid group");
+                throw new IsuException("Invalid group");
             }
 
             if (!uint.TryParse(groupName[2].ToString(), out uint courseNumber))
             {
-                throw new NotImplementedException("Invalid Group course");
+                throw new IsuException("Invalid Group course");
             }
 
             string groupNameString = groupName.Substring(3, 2);
             if (!uint.TryParse(groupNameString, out uint groupNumber))
             {
-                throw new NotImplementedException("Invalid Group name");
+                throw new IsuException("Invalid Group name");
             }
 
             var currentGroup = Group.CreateInstance(groupNumber, CourseNumber.CreateInstance(courseNumber));
-            foreach (Group @group in _dictGroup.Keys.Where(@group => @group.GroupNumber == groupNumber || Equals(@group.Number, CourseNumber.CreateInstance(courseNumber))))
+            foreach (Group @group in DictGroup.Keys.Where(@group => @group.GroupNumber == groupNumber || Equals(@group.Number, CourseNumber.CreateInstance(courseNumber))))
             {
                 currentGroup.Number = CourseNumber.CreateInstance(courseNumber);
                 currentGroup.GroupNumber = groupNumber;
             }
 
-            return _dictGroup[currentGroup];
+            return DictGroup[currentGroup];
         }
 
         public List<Student> FindStudents(CourseNumber courseNumber)
         {
             if (courseNumber.Number is <= 0 or > 4)
             {
-                throw new NotImplementedException("Invalid Course");
+                throw new IsuException("Invalid Course");
             }
 
-            return (from @group in _dictGroup.Keys where Equals(@group.Number, courseNumber) select _dictGroup[@group]).FirstOrDefault();
+            return (from @group in DictGroup.Keys where Equals(@group.Number, courseNumber) select DictGroup[@group]).FirstOrDefault();
         }
 
         public Group FindGroup(string groupName)
         {
             if (string.IsNullOrWhiteSpace(groupName) || groupName.Length != 5)
             {
-                throw new NotImplementedException("Invalid group");
+                throw new IsuException("Invalid group");
             }
 
             if (!uint.TryParse(groupName[2].ToString(), out uint courseNumber))
             {
-                throw new NotImplementedException("Invalid Group course");
+                throw new IsuException("Invalid Group course");
             }
 
             string currentGroupName = groupName.Substring(3, 2);
             if (!uint.TryParse(currentGroupName, out uint groupNumber))
             {
-                throw new NotImplementedException("Invalid Group name");
+                throw new IsuException("Invalid Group name");
             }
 
             var currentGroup = Group.CreateInstance(groupNumber, CourseNumber.CreateInstance(courseNumber));
-            foreach (Group @group in _dictGroup.Keys.Where(@group => Equals(@group.Number, CourseNumber.CreateInstance(courseNumber)) || @group.GroupNumber == groupNumber))
+            foreach (Group @group in DictGroup.Keys.Where(@group => Equals(@group.Number, CourseNumber.CreateInstance(courseNumber)) || @group.GroupNumber == groupNumber))
             {
                 currentGroup.Number = CourseNumber.CreateInstance(courseNumber);
                 currentGroup.GroupNumber = groupNumber;
@@ -190,30 +192,30 @@ namespace Isu.Classes
         {
             if (courseNumber.Number is <= 0 or > 4)
             {
-                throw new NotImplementedException("Invalid Course");
+                throw new IsuException("Invalid Course");
             }
 
-            return _dictGroup.Keys.Where(@group => Equals(@group.Number, courseNumber)).ToList();
+            return DictGroup.Keys.Where(@group => Equals(@group.Number, courseNumber)).ToList();
         }
 
         public void ChangeStudentGroup(Student student, Group newGroup)
         {
             if (student.Id < 0 || student.Id > _id)
             {
-                throw new NotImplementedException("Invalid Student");
+                throw new IsuException("Invalid Student");
             }
 
-            foreach (List<Student> students in from students in _dictGroup.Values from currentStudent in students where Equals(currentStudent, student) select students)
+            foreach (List<Student> students in from students in DictGroup.Values from currentStudent in students where Equals(currentStudent, student) select students)
             {
                 if (!students.Contains(student))
                 {
-                    throw new NotImplementedException("Student is not in this group");
+                    throw new IsuException("Student is not in this group");
                 }
 
                 students.Remove(student);
             }
 
-            _dictGroup[newGroup].Add(student);
+            DictGroup[newGroup].Add(student);
         }
     }
 }
