@@ -1,18 +1,29 @@
 #nullable enable
 using System;
+using Isu.Tools;
 
-namespace Isu.Classes
+namespace Isu.Entities
 {
     public class Student
     {
         private Student(string name, int id)
         {
-            this.Name = name;
-            this.Id = id;
+            if (id < 1)
+            {
+                throw new IsuException("Invalid id");
+            }
+
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new IsuException("Invalid name");
+            }
+
+            Name = name;
+            Id = id;
         }
 
-        public string Name { get; set; }
-        public int Id { get; set; }
+        public string Name { get; }
+        public int Id { get; }
 
         public static Student CreateInstance(string name, int id)
         {

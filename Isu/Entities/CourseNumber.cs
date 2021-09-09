@@ -1,10 +1,17 @@
+using Isu.Tools;
+
 #nullable enable
-namespace Isu.Classes
+namespace Isu.Entities
 {
     public class CourseNumber
     {
         private CourseNumber(uint number)
         {
+            if (number is <= 0 or > 4)
+            {
+                throw new IsuException("Invalid Course");
+            }
+
             Number = number;
         }
 

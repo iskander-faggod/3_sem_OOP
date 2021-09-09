@@ -1,22 +1,42 @@
 #nullable enable
 using System;
+using System.Collections.Generic;
+using Isu.Tools;
 
-namespace Isu.Classes
+namespace Isu.Entities
 {
     public class Group
     {
-        public Group(uint groupNumber, CourseNumber courseNumber)
+        private readonly List<Student> _studentsList;
+
+        public Group(string groupName)
         {
-            GroupNumber = groupNumber;
-            Number = courseNumber;
+            GroupNumber = Convert.ToUInt16(groupName.Substring(3, 2));
+            CourseNumber = CourseNumber.CreateInstance(Convert.ToUInt16(groupName.Substring(2, 1)));
+            if (GroupNumber > 14)
+            {
+                throw new IsuException("Invalid group number");
+            }
+
+            if (CourseNumber.Number > 4)
+            {
+                throw new IsuException("Invalid course number");
+            }
+
+            if (string.IsNullOrWhiteSpace(groupName) || groupName.Length != 5)
+            {
+                throw new IsuException("Invalid group");
+            }
+
+            _studentsList = new List<Student>();
         }
 
-        public CourseNumber Number { get; set; }
+        public CourseNumber CourseNumber { get; set; }
         public uint GroupNumber { get; set; }
 
-        public static Group CreateInstance(uint groupNumber, CourseNumber courseNumber)
+        public void AddStudent(Student student)
         {
-            return new Group(groupNumber, courseNumber);
+            _studentsList.Add(student);
         }
 
         public override bool Equals(object? obj)
@@ -27,9 +47,9 @@ namespace Isu.Classes
             }
 
             var a = (Group)obj;
-            return a.GroupNumber == this.GroupNumber && a.Number.Equals(this.Number);
+            return a.GroupNumber == this.GroupNumber && a.CourseNumber.Equals(this.CourseNumber);
         }
 
-        public override int GetHashCode() => HashCode.Combine(Number, GroupNumber);
+        public override int GetHashCode() => HashCode.Combine(CourseNumber, GroupNumber);
     }
 }
