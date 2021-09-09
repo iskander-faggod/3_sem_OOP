@@ -9,7 +9,7 @@ namespace Isu.Entities
     {
         private const int MaxGroupNumber = 14;
         private const int MaxCourseNumber = 4;
-        private const int MaxGroupLength = 4;
+        private const int MaxGroupLength = 5;
         private readonly List<Student> _studentsList;
 
         public Group(string groupName)
