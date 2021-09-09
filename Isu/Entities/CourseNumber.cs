@@ -9,7 +9,7 @@ namespace Isu.Entities
         {
             if (number is <= 0 or > 4)
             {
-                throw new IsuException("Invalid Course");
+                throw new IsuException($"Invalid Course, course number - {number}");
             }
 
             Number = number;

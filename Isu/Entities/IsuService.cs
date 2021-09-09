@@ -64,7 +64,7 @@ namespace Isu.Entities
         {
             if (string.IsNullOrEmpty(name))
             {
-                throw new IsuException("Invalid name");
+                throw new IsuException($"Invalid name, name - {name}");
             }
 
             foreach (Student student in DictGroup.Values.SelectMany(students => students.Where(student => student.Name == name)))
@@ -79,7 +79,7 @@ namespace Isu.Entities
         {
             if (string.IsNullOrWhiteSpace(groupName) || groupName.Length is > 5 or <= 0)
             {
-                throw new IsuException("Invalid group");
+                throw new IsuException($"Invalid group with name - {groupName}");
             }
 
             return DictGroup[new Group(groupName)];
@@ -104,14 +104,7 @@ namespace Isu.Entities
             var currentGroup = new Group(groupName);
             foreach (Group group in DictGroup.Keys)
             {
-                if (Equals(@group, currentGroup))
-                {
-                    return group;
-                }
-                else
-                {
-                    throw new IsuException("Group not find");
-                }
+                return Equals(@group, currentGroup) ? @group : throw new IsuException($"Group not find, with number - {groupName} ");
             }
 
             return null;
@@ -119,11 +112,6 @@ namespace Isu.Entities
 
         public List<Group> FindGroups(CourseNumber courseNumber)
         {
-            if (courseNumber.Number is <= 0 or > 4)
-            {
-                throw new IsuException("Invalid Course");
-            }
-
             return DictGroup.Keys.Where(@group => Equals(@group.CourseNumber, courseNumber)).ToList();
         }
 

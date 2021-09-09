@@ -10,12 +10,12 @@ namespace Isu.Entities
         {
             if (id < 1)
             {
-                throw new IsuException("Invalid id");
+                throw new IsuException($"Invalid id, id - {id}");
             }
 
             if (string.IsNullOrEmpty(name))
             {
-                throw new IsuException("Invalid name");
+                throw new IsuException($"Invalid name, name - {name}");
             }
 
             Name = name;

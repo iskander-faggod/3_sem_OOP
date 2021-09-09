@@ -7,25 +7,28 @@ namespace Isu.Entities
 {
     public class Group
     {
+        private const int MaxGroupNumber = 14;
+        private const int MaxCourseNumber = 4;
+        private const int MaxGroupLength = 4;
         private readonly List<Student> _studentsList;
 
         public Group(string groupName)
         {
             GroupNumber = Convert.ToUInt16(groupName.Substring(3, 2));
             CourseNumber = CourseNumber.CreateInstance(Convert.ToUInt16(groupName.Substring(2, 1)));
-            if (GroupNumber > 14)
+            if (GroupNumber > MaxGroupNumber)
             {
-                throw new IsuException("Invalid group number");
+                throw new IsuException($"Invalid group number, group number - {GroupNumber}");
             }
 
-            if (CourseNumber.Number > 4)
+            if (CourseNumber.Number > MaxCourseNumber)
             {
-                throw new IsuException("Invalid course number");
+                throw new IsuException($"Invalid course number, course number - {CourseNumber}");
             }
 
-            if (string.IsNullOrWhiteSpace(groupName) || groupName.Length != 5)
+            if (string.IsNullOrWhiteSpace(groupName) || groupName.Length != MaxGroupLength)
             {
-                throw new IsuException("Invalid group");
+                throw new IsuException($"Invalid group, with name - {groupName}");
             }
 
             _studentsList = new List<Student>();
