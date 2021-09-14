@@ -9,26 +9,26 @@ namespace Isu.Tests
 {
     public class Tests
     {
-        private IsuService _isuService;
+        public IsuService IsuService;
 
         [SetUp]
         public void Setup()
         {
             //TODO: implement
-            _isuService = IsuService.CreateInstance();
+            IsuService = new IsuService(25);
         }
         
         [Test]
         public void AddStudentToGroup_StudentHasGroupAndGroupContainsStudent()
         {
-            Group m3101 = _isuService.AddGroup("M3101");
-            Student newStudent = _isuService.AddStudent(m3101, "Iskander");
-            List<Student> studentsList = _isuService.DictGroup[m3101];
-            Student student = _isuService.DictGroup
-                .SelectMany(students => students.Value)
-                .First(student => Equals(student, newStudent));
-            Assert.True(Equals(student, newStudent));
-            Assert.True(studentsList.Contains(student));
+            Group m3101 = IsuService.AddGroup("M3101");
+            Student newStudent1 = IsuService.AddStudent(m3101, "Iskander");
+            Student newStudent2= IsuService.AddStudent(m3101, "Sasha");
+            Student newStudent3 = IsuService.AddStudent(m3101, "Misha");
+            
+            Assert.True(m3101.GetStudents().Contains(newStudent1));
+            Assert.True(m3101.GetStudents().Contains(newStudent2));
+            Assert.True(m3101.GetStudents().Contains(newStudent3));
         }
         
         [Test]
@@ -36,10 +36,10 @@ namespace Isu.Tests
         {
             Assert.Catch<IsuException>(() =>
             {
-                Group @group = _isuService.AddGroup("M3201");
-                for (int i = 0; i < 27; i++)
+                Group @group = IsuService.AddGroup("M3201");
+                for (int i = 0; i < 28; i++)
                 {
-                    _isuService.AddStudent(group, "crash");
+                    IsuService.AddStudent(group, "crash");
                 }
             });
         }
@@ -48,19 +48,19 @@ namespace Isu.Tests
         {
             Assert.Catch<IsuException>(() =>
             {
-                Group group = _isuService.AddGroup("M3222201");
+                Group group = IsuService.AddGroup("M3222201");
             });
         }
 
         [Test]
         public void TransferStudentToAnotherGroup_GroupChanged()
         {
-            Group oldGroup = _isuService.AddGroup("M3108");
-            Group newGroup = _isuService.AddGroup("M3201");
-            Student newStudent = _isuService.FindStudent("Iskander");
-            _isuService.AddStudent(oldGroup, "Iskander");
-            _isuService.ChangeStudentGroup(newStudent, newGroup);
-            Assert.False(_isuService.DictGroup[oldGroup].Contains(newStudent));
+            Group oldGroup = IsuService.AddGroup("M3108");
+            Group newGroup = IsuService.AddGroup("M3201");
+            Student newStudent = IsuService.AddStudent(oldGroup, "Iskander");
+            IsuService.AddStudent(oldGroup, "Iskander");
+            IsuService.ChangeStudentGroup(newStudent, newGroup);
+            Assert.True(Equals(newGroup.GetStudentByName("Iskander"), newStudent));
         }
     }
 }

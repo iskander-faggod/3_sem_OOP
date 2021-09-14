@@ -6,7 +6,7 @@ namespace Isu.Entities
 {
     public class Student
     {
-        private Student(string name, int id)
+        public Student(string name, int id)
         {
             if (id < 1)
             {
@@ -24,15 +24,10 @@ namespace Isu.Entities
 
         public string Name { get; }
         public int Id { get; }
-
-        public static Student CreateInstance(string name, int id) => new Student(name, id);
-
         public override int GetHashCode() => HashCode.Combine(Name, Id);
 
-        public override bool Equals(object? obj) => Equals(obj as Student);
-        private bool Equals(Student? student)
-        {
-            return student is not null && student.Id == this.Id;
-        }
+        public override bool Equals(object? obj) => base.Equals(obj);
+
+        protected bool Equals(Student other) => Name == other.Name && Id == other.Id;
     }
 }

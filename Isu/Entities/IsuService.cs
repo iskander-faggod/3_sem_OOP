@@ -10,54 +10,47 @@ namespace Isu.Entities
 {
     public class IsuService : IIsuService
     {
-        private IsuService(Dictionary<Group, List<Student>> dictGroup)
+        private int _maxGroupSize;
+        public IsuService(int maxGroupSize)
         {
-            DictGroup = dictGroup;
+            Groups = new List<Group>();
+            _maxGroupSize = maxGroupSize;
         }
 
-        private IsuService()
-        {
-            DictGroup = new Dictionary<Group, List<Student>>();
-        }
-
-        public Dictionary<Group, List<Student>> DictGroup { get; }
+        public List<Group> Groups { get; set; }
         private int Id { get; set; } = 0;
-        private int CountOfStudents { get; set; } = 25;
-        public static IsuService CreateInstance()
-        {
-            return new IsuService();
-        }
 
         public Group AddGroup(string name)
         {
-            var studentsList = new List<Student>();
             var newGroup = new Group(name);
 
-            if (DictGroup.ContainsKey(newGroup)) return newGroup;
-            DictGroup.Add(newGroup, studentsList);
-
-            return newGroup;
+            if (!Groups.Contains(newGroup))
+            {
+                Groups.Add(newGroup);
+                return newGroup;
+            }
+            else
+            {
+                throw new IsuException("Group is already created");
+            }
         }
 
         public Student AddStudent(Group group, string name)
         {
-            if (DictGroup[group].Count > CountOfStudents)
+            if (group.GetGroupSize() > _maxGroupSize)
             {
                 throw new IsuException("Can't add student to group, group is full");
             }
 
             ++Id;
-            var student = Student.CreateInstance(name, Id);
-            List<Student> studentsList = DictGroup[group];
+            var student = new Student(name, Id);
             group.AddStudent(student);
-            if (studentsList.Contains(student)) return student;
-            DictGroup[group].Add(student);
             return student;
         }
 
         public Student GetStudent(int id)
         {
-            return DictGroup.Values.SelectMany(students => students.Where(student => student.Id == id)).FirstOrDefault();
+            return Groups.Select(@group => @group.GetStudentById(id)).FirstOrDefault();
         }
 
         public Student FindStudent(string name)
@@ -67,12 +60,7 @@ namespace Isu.Entities
                 throw new IsuException($"Invalid name, name - {name}");
             }
 
-            foreach (Student student in DictGroup.Values.SelectMany(students => students.Where(student => student.Name == name)))
-            {
-                return student;
-            }
-
-            return null;
+            return Groups.Select(group => group.GetStudentByName(name)).FirstOrDefault();
         }
 
         public List<Student> FindStudents(string groupName)
@@ -81,53 +69,39 @@ namespace Isu.Entities
             {
                 throw new IsuException($"Invalid group with name - {groupName}");
             }
-
-            return DictGroup[new Group(groupName)];
+            else
+            {
+                return Groups
+                    .Where(@group => @group.GroupName == groupName)
+                    .Select(@group => @group.GetStudents())
+                    .FirstOrDefault();
+            }
         }
 
         public List<Student> FindStudents(CourseNumber courseNumber)
         {
-            foreach (Group @group in DictGroup.Keys)
-            {
-                if (Equals(@group.CourseNumber, courseNumber))
-                {
-                    List<Student> list = DictGroup[@group];
-                    return list;
-                }
-            }
-
-            return null;
+            return Groups
+                .Where(@group => @group.CourseNumber.Number == courseNumber.Number)
+                .Select(@group => @group.GetStudents()).FirstOrDefault();
         }
 
         public Group FindGroup(string groupName)
         {
-            var currentGroup = new Group(groupName);
-            foreach (Group group in DictGroup.Keys)
-            {
-                return Equals(@group, currentGroup) ? @group : throw new IsuException($"Group not find, with number - {groupName} ");
-            }
-
-            return null;
+            return Groups.FirstOrDefault(group => @group.GroupName == groupName);
         }
 
         public List<Group> FindGroups(CourseNumber courseNumber)
         {
-            return DictGroup.Keys.Where(@group => Equals(@group.CourseNumber, courseNumber)).ToList();
+            return Groups.Where(@group => @group.CourseNumber.Number == courseNumber.Number).ToList();
         }
 
         public void ChangeStudentGroup(Student student, Group newGroup)
         {
-            foreach (List<Student> students in from students in DictGroup.Values from currentStudent in students where Equals(currentStudent, student) select students)
+            foreach (Group group in Groups)
             {
-                if (!students.Contains(student))
-                {
-                    throw new IsuException("Student is not in this group");
-                }
-
-                students.Remove(student);
+                    group.RemoveStudent(student);
+                    newGroup.AddStudent(student);
             }
-
-            DictGroup[newGroup].Add(student);
         }
     }
 }
