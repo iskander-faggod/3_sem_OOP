@@ -25,25 +25,14 @@ namespace Isu.Entities
         public string Name { get; }
         public int Id { get; }
 
-        public static Student CreateInstance(string name, int id)
-        {
-            return new Student(name, id);
-        }
+        public static Student CreateInstance(string name, int id) => new Student(name, id);
 
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Name, Id);
-        }
+        public override int GetHashCode() => HashCode.Combine(Name, Id);
 
-        public override bool Equals(object? obj)
+        public override bool Equals(object? obj) => Equals(obj as Student);
+        private bool Equals(Student? student)
         {
-            if (obj is null)
-            {
-                return false;
-            }
-
-            var a = (Student)obj;
-            return a.Id == this.Id && a.Name == this.Name;
+            return student is not null && student.Id == this.Id;
         }
     }
 }

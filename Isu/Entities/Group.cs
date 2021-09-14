@@ -34,25 +34,20 @@ namespace Isu.Entities
             _studentsList = new List<Student>();
         }
 
-        public CourseNumber CourseNumber { get; set; }
-        public uint GroupNumber { get; set; }
+        public CourseNumber CourseNumber { get; }
+        public uint GroupNumber { get; }
 
         public void AddStudent(Student student)
         {
             _studentsList.Add(student);
         }
 
-        public override bool Equals(object? obj)
-        {
-            if (obj is null)
-            {
-                return false;
-            }
-
-            var a = (Group)obj;
-            return a.GroupNumber == this.GroupNumber && a.CourseNumber.Equals(this.CourseNumber);
-        }
-
+        public override bool Equals(object? obj) => Equals(obj as Group);
         public override int GetHashCode() => HashCode.Combine(CourseNumber, GroupNumber);
+
+        private bool Equals(Group? group)
+        {
+            return @group is not null && @group.GroupNumber == this.GroupNumber;
+        }
     }
 }
