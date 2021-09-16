@@ -42,7 +42,7 @@ namespace Isu.Entities
         public List<Student> StudentsList { get; }
         public void AddStudent(Student student)
         {
-            if (IsStudentInGroup(student))
+            if (!IsStudentInGroup(student))
             {
                 StudentsList.Add(student);
             }

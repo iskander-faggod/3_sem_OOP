@@ -10,28 +10,28 @@ namespace Isu.Entities
 {
     public class IsuService : IIsuService
     {
-        private int _maxGroupSize;
+        private readonly List<Group> _groups;
+        private readonly int _maxGroupSize;
         public IsuService(int maxGroupSize)
         {
-            Groups = new List<Group>();
+            _groups = new List<Group>();
             _maxGroupSize = maxGroupSize;
         }
 
-        private List<Group> Groups { get; set; }
         private int Id { get;  set; } = 0;
 
         public Group AddGroup(string name)
         {
             var newGroup = new Group(name);
 
-            if (Groups.Contains(newGroup))
+            if (_groups.Contains(newGroup))
             {
                 throw new IsuException("Group is already created");
             }
 
-            Groups.Add(newGroup);
+            _groups.Add(newGroup);
             return newGroup;
-            }
+        }
 
         public Student AddStudent(Group group, string name)
         {
@@ -48,7 +48,7 @@ namespace Isu.Entities
 
         public Student GetStudent(int id)
         {
-            return Groups
+            return _groups
                 .Select(@group => @group.GetStudentById(id))
                 .FirstOrDefault();
         }
@@ -60,7 +60,7 @@ namespace Isu.Entities
                 throw new IsuException($"Invalid name, name - {name}");
             }
 
-            return Groups
+            return _groups
                 .Select(group => group.GetStudentByName(name))
                 .FirstOrDefault();
         }
@@ -69,7 +69,7 @@ namespace Isu.Entities
         {
             if (!string.IsNullOrWhiteSpace(groupName) && groupName.Length is <= 5 and > 0)
             {
-                return Groups
+                return _groups
                     .Where(@group => @group.GroupName == groupName)
                     .Select(@group => @group.StudentsList)
                     .FirstOrDefault();
@@ -82,7 +82,7 @@ namespace Isu.Entities
 
         public List<Student> FindStudents(CourseNumber courseNumber)
         {
-            return Groups
+            return _groups
                 .Where(@group => @group.CourseNumber.Number == courseNumber.Number)
                 .Select(@group => @group.StudentsList)
                 .FirstOrDefault();
@@ -90,20 +90,20 @@ namespace Isu.Entities
 
         public Group FindGroup(string groupName)
         {
-            return Groups
+            return _groups
                 .FirstOrDefault(group => @group.GroupName == groupName);
         }
 
         public List<Group> FindGroups(CourseNumber courseNumber)
         {
-            return Groups
+            return _groups
                 .Where(@group => @group.CourseNumber.Number == courseNumber.Number)
                 .ToList();
         }
 
         public void ChangeStudentGroup(Student student, Group newGroup)
         {
-            foreach (Group group in Groups)
+            foreach (Group group in _groups)
             {
                     group.RemoveStudent(student);
                     newGroup.AddStudent(student);

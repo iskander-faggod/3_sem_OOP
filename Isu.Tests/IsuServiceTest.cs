@@ -57,10 +57,10 @@ namespace Isu.Tests
         {
             Group oldGroup = IsuService.AddGroup("M3108");
             Group newGroup = IsuService.AddGroup("M3201");
-            Student newStudent = IsuService.AddStudent(oldGroup, "Iskander");
-            IsuService.AddStudent(oldGroup, "Iskander");
+            Student newStudent = IsuService.AddStudent(oldGroup, "NewIskander");
+            IsuService.AddStudent(oldGroup, "NewIskander");
             IsuService.ChangeStudentGroup(newStudent, newGroup);
-            Assert.True(Equals(newGroup.GetStudentByName("Iskander"), newStudent));
+            Assert.True(Equals(newGroup.GetStudentByName("NewIskander"), newStudent));
         }
     }
 }
