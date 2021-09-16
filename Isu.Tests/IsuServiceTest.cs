@@ -60,7 +60,7 @@ namespace Isu.Tests
             Student newStudent = IsuService.AddStudent(oldGroup, "NewIskander");
             IsuService.AddStudent(oldGroup, "NewIskander");
             IsuService.ChangeStudentGroup(newStudent, newGroup);
-            Assert.True(Equals(newGroup.GetStudentByName("NewIskander"), newStudent));
+            Assert.AreEqual(newGroup.GetStudentByName("NewIskander"), newStudent);
         }
     }
 }

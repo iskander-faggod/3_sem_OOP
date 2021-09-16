@@ -91,16 +91,17 @@ namespace Isu.Entities
 
         public override bool Equals(object? obj)
         {
-            return base.Equals(obj);
-        }
+            if (obj is null)
+            {
+                return false;
+            }
 
-        protected bool Equals(Group other)
-        {
-            return CourseNumber
-                       .Equals(other.CourseNumber) &&
-                   GroupNumber == other.GroupNumber &&
-                   GroupName == other.GroupName &&
-                   StudentsList.Equals(other.StudentsList);
+            var a = obj as Group;
+            return a != null &&
+                   a.CourseNumber == this.CourseNumber &&
+                   a.GroupName == this.GroupName &&
+                   a.GroupNumber == this.GroupNumber &&
+                   a.StudentsList == this.StudentsList;
         }
     }
 }

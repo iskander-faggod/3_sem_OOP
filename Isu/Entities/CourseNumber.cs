@@ -34,8 +34,8 @@ namespace Isu.Entities
                 return false;
             }
 
-            var a = (CourseNumber)obj;
-            return a.Number == this.Number;
+            var a = obj as CourseNumber;
+            return a != null && a.Number == this.Number;
         }
     }
 }

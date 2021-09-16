@@ -26,8 +26,15 @@ namespace Isu.Entities
         public int Id { get; }
         public override int GetHashCode() => HashCode.Combine(Name, Id);
 
-        public override bool Equals(object? obj) => base.Equals(obj);
+        public override bool Equals(object? obj)
+        {
+            if (obj is null)
+            {
+                return false;
+            }
 
-        protected bool Equals(Student other) => Name == other.Name && Id == other.Id;
+            var a = obj as Student;
+            return a != null && a.Id == this.Id && a.Name == this.Name;
+        }
     }
 }
