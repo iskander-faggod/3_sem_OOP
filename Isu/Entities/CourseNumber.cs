@@ -1,3 +1,4 @@
+using System;
 using Isu.Tools;
 
 #nullable enable
@@ -29,13 +30,12 @@ namespace Isu.Entities
 
         public override bool Equals(object? obj)
         {
-            if (obj is null)
+            if (obj is CourseNumber courseNumber)
             {
-                return false;
+                return courseNumber.Number == Number;
             }
 
-            var a = obj as CourseNumber;
-            return a != null && a.Number == this.Number;
+            return false;
         }
     }
 }

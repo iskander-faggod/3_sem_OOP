@@ -28,13 +28,13 @@ namespace Isu.Entities
 
         public override bool Equals(object? obj)
         {
-            if (obj is null)
+            if (obj is Student student)
             {
-                return false;
+                return student.Id == Id
+                       && student.Name == Name;
             }
 
-            var a = obj as Student;
-            return a != null && a.Id == this.Id && a.Name == this.Name;
+            return false;
         }
     }
 }
