@@ -39,10 +39,10 @@ namespace Isu.Entities
         public uint GroupNumber { get; }
 
         public string GroupName { get; }
-        private List<Student> StudentsList { get; }
+        public List<Student> StudentsList { get; }
         public void AddStudent(Student student)
         {
-            if (!StudentsList.Contains(student))
+            if (IsStudentInGroup(student))
             {
                 StudentsList.Add(student);
             }
@@ -54,14 +54,12 @@ namespace Isu.Entities
 
         public void RemoveStudent(Student student)
         {
-            if (StudentsList.Contains(student))
-            {
-                StudentsList.Remove(student);
-            }
-            else
+            if (!IsStudentInGroup(student))
             {
                 throw new IsuException("Student is not in the group");
             }
+
+            StudentsList.Remove(student);
         }
 
         public Student GetStudentById(int id)
@@ -79,11 +77,6 @@ namespace Isu.Entities
         public bool IsStudentInGroup(Student student)
         {
             return StudentsList.Contains(student);
-        }
-
-        public List<Student> GetStudents()
-        {
-            return StudentsList;
         }
 
         public int GetGroupSize()

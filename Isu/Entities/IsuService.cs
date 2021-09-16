@@ -17,23 +17,21 @@ namespace Isu.Entities
             _maxGroupSize = maxGroupSize;
         }
 
-        public List<Group> Groups { get; set; }
-        private int Id { get; set; } = 0;
+        private List<Group> Groups { get; set; }
+        private int Id { get;  set; } = 0;
 
         public Group AddGroup(string name)
         {
             var newGroup = new Group(name);
 
-            if (!Groups.Contains(newGroup))
-            {
-                Groups.Add(newGroup);
-                return newGroup;
-            }
-            else
+            if (Groups.Contains(newGroup))
             {
                 throw new IsuException("Group is already created");
             }
-        }
+
+            Groups.Add(newGroup);
+            return newGroup;
+            }
 
         public Student AddStudent(Group group, string name)
         {
@@ -50,7 +48,9 @@ namespace Isu.Entities
 
         public Student GetStudent(int id)
         {
-            return Groups.Select(@group => @group.GetStudentById(id)).FirstOrDefault();
+            return Groups
+                .Select(@group => @group.GetStudentById(id))
+                .FirstOrDefault();
         }
 
         public Student FindStudent(string name)
@@ -60,21 +60,23 @@ namespace Isu.Entities
                 throw new IsuException($"Invalid name, name - {name}");
             }
 
-            return Groups.Select(group => group.GetStudentByName(name)).FirstOrDefault();
+            return Groups
+                .Select(group => group.GetStudentByName(name))
+                .FirstOrDefault();
         }
 
         public List<Student> FindStudents(string groupName)
         {
-            if (string.IsNullOrWhiteSpace(groupName) || groupName.Length is > 5 or <= 0)
-            {
-                throw new IsuException($"Invalid group with name - {groupName}");
-            }
-            else
+            if (!string.IsNullOrWhiteSpace(groupName) && groupName.Length is <= 5 and > 0)
             {
                 return Groups
                     .Where(@group => @group.GroupName == groupName)
-                    .Select(@group => @group.GetStudents())
+                    .Select(@group => @group.StudentsList)
                     .FirstOrDefault();
+            }
+            else
+            {
+                throw new IsuException($"Invalid group with name - {groupName}");
             }
         }
 
@@ -82,17 +84,21 @@ namespace Isu.Entities
         {
             return Groups
                 .Where(@group => @group.CourseNumber.Number == courseNumber.Number)
-                .Select(@group => @group.GetStudents()).FirstOrDefault();
+                .Select(@group => @group.StudentsList)
+                .FirstOrDefault();
         }
 
         public Group FindGroup(string groupName)
         {
-            return Groups.FirstOrDefault(group => @group.GroupName == groupName);
+            return Groups
+                .FirstOrDefault(group => @group.GroupName == groupName);
         }
 
         public List<Group> FindGroups(CourseNumber courseNumber)
         {
-            return Groups.Where(@group => @group.CourseNumber.Number == courseNumber.Number).ToList();
+            return Groups
+                .Where(@group => @group.CourseNumber.Number == courseNumber.Number)
+                .ToList();
         }
 
         public void ChangeStudentGroup(Student student, Group newGroup)

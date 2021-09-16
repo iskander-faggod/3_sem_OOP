@@ -26,9 +26,9 @@ namespace Isu.Tests
             Student newStudent2= IsuService.AddStudent(m3101, "Sasha");
             Student newStudent3 = IsuService.AddStudent(m3101, "Misha");
             
-            Assert.True(m3101.GetStudents().Contains(newStudent1));
-            Assert.True(m3101.GetStudents().Contains(newStudent2));
-            Assert.True(m3101.GetStudents().Contains(newStudent3));
+            Assert.True(m3101.StudentsList.Contains(newStudent1));
+            Assert.True(m3101.StudentsList.Contains(newStudent2));
+            Assert.True(m3101.StudentsList.Contains(newStudent3));
         }
         
         [Test]
