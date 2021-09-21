@@ -1,4 +1,6 @@
-﻿namespace Shops
+﻿using Shops.Entities;
+
+namespace Shops
 {
     internal class Program
     {
