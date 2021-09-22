@@ -18,10 +18,5 @@ namespace Shops.Tools
             : base(message, innerException)
         {
         }
-
-        protected ShopException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-        }
     }
 }

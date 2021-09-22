@@ -9,9 +9,9 @@ namespace Shops.Entities
     {
         private const int MaxAddressLength = 20;
 
-        public Shop(int id, string name, string address, double fund)
+        public Shop(string name, string address, double fund)
         {
-            if (id < 0 || string.IsNullOrEmpty(name) || string.IsNullOrEmpty(address) || fund < 0)
+            if (Id < 0 || string.IsNullOrEmpty(name) || string.IsNullOrEmpty(address) || fund < 0)
             {
                 throw new ShopException("Invalid data");
             }
@@ -21,7 +21,7 @@ namespace Shops.Entities
                 throw new ShopException("Invalid address length");
             }
 
-            Id = id;
+            Id = Id++;
             Name = name;
             Address = address;
             Fund = fund;
@@ -30,7 +30,7 @@ namespace Shops.Entities
 
         public Dictionary<Product, int> ProductBase { get; private set; }
         public double Fund { get; private set; }
-        public int Id { get; }
+        public int Id { get; set; }
         public string Name { get; private set; }
         public string Address { get; private set; }
 
@@ -48,17 +48,7 @@ namespace Shops.Entities
         public override int GetHashCode() => Id.GetHashCode();
         public override bool Equals(object obj)
         {
-            if (obj is Shop shop)
-            {
-                return shop.Id == Id;
-            }
-
-            return false;
-        }
-
-        public double MinProductPrice()
-        {
-            return 100000000;
+            return obj is Shop shop && shop.Id == Id;
         }
     }
 }

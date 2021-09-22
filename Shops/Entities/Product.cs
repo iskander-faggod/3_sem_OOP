@@ -30,12 +30,7 @@ namespace Shops.Entities
 
         public override bool Equals(object obj)
         {
-            if (obj is Product product)
-            {
-                return product.Name == Name;
-            }
-
-            return false;
+            return obj is Product product && product.Name == Name;
         }
     }
 }

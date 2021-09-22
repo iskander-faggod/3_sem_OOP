@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
@@ -18,9 +19,12 @@ namespace Shops.Tests
         [Test]
         public void FindShopWithMinPrice()
         {
-            Shop shop1 = _manager.CreateShop("name1", "adress1", 30000);
-            Shop shop2 = _manager.CreateShop("name2", "adress2", 40000);
-            Shop shop3 = _manager.CreateShop("name3", "adress3", 50000);
+            var shops1 = new Shop( "name1", "adress1", 30000);
+            var shops2 = new Shop( "name2", "adress2", 40000);
+            var shops3= new Shop( "name3", "adress3", 50000);
+            Shop shop1 = _manager.ShopRegistration(shops1);
+            Shop shop2 = _manager.ShopRegistration(shops2);
+            Shop shop3 = _manager.ShopRegistration(shops3);
 
             var product1 = new Product("product1", 10);
             var product2 = new Product("product2", 1000); 
@@ -52,7 +56,8 @@ namespace Shops.Tests
         [Test]
         public void AddedProductInAShop()
         {
-            Shop shop1 = _manager.CreateShop("shop1", "shop1adress", 30000);
+            Shop shops1 = new Shop("shop1", "shop1adress", 30000);
+            Shop shop1 = _manager.ShopRegistration(shops1);
             var product1 = new Product("product1", 10);
             var person = new Person("Name", 3000);
             _manager.DeliveryProduct(shop1, product1, 1);
@@ -63,15 +68,16 @@ namespace Shops.Tests
         public void ProductRegistration()
         {
             var product = new Product("name", 1000);
-            _manager.ProductRegistration(product.Name, product.Price, 3);
-            List<Product> productsList = _manager.GetProductsList();
+            _manager.ProductRegistration(product);
+            var productsList = _manager.ProductsFromManager;
             Assert.True(productsList.Contains(product)) ;
         }
 
         [Test]
         public void ShopDeliveryAndBuyProducts()
         {
-            Shop shop1 = _manager.CreateShop("shop1", "shop1adress", 30000);
+            Shop shops1 = new Shop("shop1", "shop1adress", 30000);
+            Shop shop1 = _manager.ShopRegistration(shops1);
             var productBase = new Dictionary<Product, int>();
             var product1 = new Product("product1", 11);
             var product2 = new Product("product2", 1); 
@@ -86,10 +92,10 @@ namespace Shops.Tests
             Assert.True(shop1.ProductBase.Keys.Contains(product2));
             Assert.True(shop1.ProductBase.Keys.Contains(product3));
             Assert.True(shop1.ProductBase.Keys.Contains(product4));
-            Assert.True(shop1.ProductBase[product1] == 1);
-            Assert.True(shop1.ProductBase[product2] == 2);
-            Assert.True(shop1.ProductBase[product3] == 3);
-            Assert.True(shop1.ProductBase[product4] == 4);
+            Assert.AreEqual(shop1.ProductBase[product1],1);
+            Assert.AreEqual(shop1.ProductBase[product2], 2);
+            Assert.AreEqual(shop1.ProductBase[product3],3);
+            Assert.AreEqual(shop1.ProductBase[product4], 4);
 
             var person = new Person("Name", 3000);
             _manager.BuyProducts(shop1, person, productBase);

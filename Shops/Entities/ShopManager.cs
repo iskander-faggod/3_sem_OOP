@@ -14,29 +14,29 @@ namespace Shops.Entities
             ProductsList = new List<Product>();
         }
 
-        private List<Shop> ShopsList { get; set; }
+        public IReadOnlyList<Product> ProductsFromManager => ProductsList;
         private List<Product> ProductsList { get; }
+
+        private List<Shop> ShopsList { get; set; }
+
         private int ShopId { get; set; } = 0;
 
-        public Shop CreateShop(string name, string address, double money)
+        public Shop ShopRegistration(Shop shop)
         {
             ShopId++;
-            var currentShop = new Shop(ShopId, name, address, money);
-            ShopsList.Add(currentShop);
-            return currentShop;
+            ShopsList.Add(shop);
+            shop.Id = ShopId;
+            return shop;
         }
 
-        public void ProductRegistration(string productName, double productPrice, int productCount)
+        public void ProductRegistration(Product product)
         {
-            var product = new Product(productName, productPrice);
-            if (!ProductsList.Contains(product))
-            {
-                ProductsList.Add(product);
-            }
-            else
+            if (ProductsList.Contains(product))
             {
                 throw new ShopException("Product is already register");
             }
+
+            ProductsList.Add(product);
         }
 
         public void DeliveryProduct(Shop shop, Product product, int productCount)
@@ -61,33 +61,29 @@ namespace Shops.Entities
 
             foreach (Shop currentShop in ShopsList)
             {
-                if (Equals(currentShop, shop))
-                {
-                    currentShop.Transaction(fullPrice);
-                    foreach ((Product key, int value) in productsBase)
-                    {
-                        currentShop.ProductBase.Add(key, value);
-                    }
-                }
-                else
+                if (!Equals(currentShop, shop))
                 {
                     throw new ShopException("Can not find a shop");
+                }
+
+                currentShop.Transaction(fullPrice);
+                foreach ((Product key, int value) in productsBase)
+                {
+                    currentShop.ProductBase.Add(key, value);
                 }
             }
         }
 
         public void BuyProduct(Shop shop, Person person, Product product, int productCount)
         {
-            if (shop.ProductBase.ContainsKey(product) && person.Fund >= product.Price * productCount)
-            {
-                shop.ProductBase[product] -= productCount;
-                shop.Transaction(product.Price * productCount);
-                person.Transaction(product.Price * productCount);
-            }
-            else
+            if (!shop.ProductBase.ContainsKey(product) || !(person.Fund >= product.Price * productCount))
             {
                 throw new ShopException("Invalid data");
             }
+
+            shop.ProductBase[product] -= productCount;
+            shop.Transaction(product.Price * productCount);
+            person.Transaction(product.Price * productCount);
         }
 
         public void BuyProducts(Shop shop, Person person, Dictionary<Product, int> productsBase)
@@ -96,17 +92,14 @@ namespace Shops.Entities
 
             foreach ((Product product, int count) in productsBase)
             {
-                if (shop.ProductBase[product] >= count && person.Fund >= fullPrice)
-                {
-                    shop.ProductBase[product] -= count;
-                    shop.Transaction(fullPrice);
-                    person.Transaction(fullPrice);
-                    person.Card.Add(product);
-                }
-                else
+                if (shop.ProductBase[product] < count || !(person.Fund >= fullPrice))
                 {
                     throw new ShopException("Invalid data");
                 }
+
+                shop.ProductBase[product] -= count;
+                shop.Transaction(fullPrice);
+                person.Transaction(fullPrice);
             }
         }
 
@@ -130,22 +123,15 @@ namespace Shops.Entities
             }
         }
 
-        public List<Product> GetProductsList()
-        {
-            return ProductsList;
-        }
-
         private void ShopBuyProducts(Shop currentShop, Product product, int productCount)
         {
-            if (currentShop.Fund >= product.Price * productCount)
-            {
-                currentShop.Transaction(product.Price * productCount);
-                currentShop.ProductBase[product] = productCount;
-            }
-            else
+            if (!(currentShop.Fund >= product.Price * productCount))
             {
                 throw new ShopException("Shop doesn't have enough money to delivery products");
             }
+
+            currentShop.Transaction(product.Price * productCount);
+            currentShop.ProductBase[product] = productCount;
 
             if (currentShop.ProductBase.Keys.All(currentProduct => Equals(currentProduct, product)) &&
                 currentShop.ProductBase.Any())
