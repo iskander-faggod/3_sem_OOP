@@ -1,8 +1,10 @@
-﻿namespace Isu
+﻿using System;
+
+namespace Isu
 {
     internal class Program
     {
-        private static void Main()
+        public static void Main(string[] args)
         {
         }
     }
