@@ -19,13 +19,9 @@ namespace Shops.Entities
 
         private List<Shop> ShopsList { get; set; }
 
-        private int ShopId { get; set; } = 0;
-
         public Shop ShopRegistration(Shop shop)
         {
-            ShopId++;
             ShopsList.Add(shop);
-            shop.Id = ShopId;
             return shop;
         }
 
@@ -52,7 +48,12 @@ namespace Shops.Entities
 
         public void DeliveryProducts(Shop shop, Dictionary<Product, int> productsBase)
         {
-            if (productsBase == null)
+            if (!ShopsList.Contains(shop))
+            {
+                throw new ShopException("Can not find a shop");
+            }
+
+            if (productsBase is null)
             {
                 throw new ShopException("Invalid data");
             }
@@ -61,15 +62,10 @@ namespace Shops.Entities
 
             foreach (Shop currentShop in ShopsList)
             {
-                if (!Equals(currentShop, shop))
-                {
-                    throw new ShopException("Can not find a shop");
-                }
-
                 currentShop.Transaction(fullPrice);
                 foreach ((Product key, int value) in productsBase)
                 {
-                    currentShop.ProductBase.Add(key, value);
+                    currentShop.ProductBase.TryAdd(key, value);
                 }
             }
         }

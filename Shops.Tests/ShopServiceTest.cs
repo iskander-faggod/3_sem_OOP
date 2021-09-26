@@ -34,23 +34,15 @@ namespace Shops.Tests
             _manager.DeliveryProduct(shop1, product1, 1);
             _manager.DeliveryProduct(shop1, product2, 1);
             _manager.DeliveryProduct(shop1, product3, 1);
-            shop1.ChangePrice(product2, 20);
-
-            product1 = product1.Clone();
-            product2 = product2.Clone();
-            product3 = product3.Clone();
-
+            product2 = new Product("product2", 20);
             _manager.DeliveryProduct(shop2, product1, 3);
             _manager.DeliveryProduct(shop2, product2, 4);
-            shop2.ChangePrice(product2, 100);
-
-            product1 = product1.Clone();
+            product2 = new Product("product2", 100);
             _manager.DeliveryProduct(shop3, product1, 1000);
-            shop3.ChangePrice(product1, 5);
-
+            product2 = new Product("product2", 100);
             Shop value = _manager.FindShopWithMinPriceProduct(product2);
             Assert.True(value.ProductBase.Keys.Contains(product2));
-            Assert.AreEqual(shop1, value);
+            Assert.AreEqual(shop2, value);
         }
 
         [Test]
@@ -103,6 +95,39 @@ namespace Shops.Tests
             Assert.True(shop1.ProductBase.Keys.Contains(product2));
             Assert.True(shop1.ProductBase.Keys.Contains(product3));
             Assert.True(shop1.ProductBase.Keys.Contains(product4));
+        }
+
+        [Test]
+        public void ShopDeliveryEqualsTest()
+        {
+            Shop shops1 = new Shop("shop1", "shop1adress", 30000);
+            Shop shops2 = new Shop("shop2", "shop2adress", 40000);
+            Shop shop1 = _manager.ShopRegistration(shops1);
+            Shop shop2 = _manager.ShopRegistration(shops2);
+            var productBase = new Dictionary<Product, int>();
+            var productBase2 = new Dictionary<Product, int>();
+            var product1 = new Product("product1", 11);
+            var product2 = new Product("product2", 1); 
+            var product3 = new Product("product3", 1);
+            var product4 = new Product("product4", 1);
+            productBase.Add(product1, 1);
+            productBase.Add(product2, 2);
+            productBase.Add(product3, 3);
+            productBase.Add(product4, 4);
+            productBase2.Add(product1, 1);
+            productBase2.Add(product2, 2);
+            productBase2.Add(product3, 3);
+            productBase2.Add(product4, 4);
+            _manager.DeliveryProducts(shop1, productBase);
+            _manager.DeliveryProducts(shop2, productBase2);
+            Assert.True(shop1.ProductBase.Keys.Contains(product1));
+            Assert.True(shop1.ProductBase.Keys.Contains(product2));
+            Assert.True(shop1.ProductBase.Keys.Contains(product3));
+            Assert.True(shop1.ProductBase.Keys.Contains(product4));
+            Assert.True(shop2.ProductBase.Keys.Contains(product1));
+            Assert.True(shop2.ProductBase.Keys.Contains(product2));
+            Assert.True(shop2.ProductBase.Keys.Contains(product3));
+            Assert.True(shop2.ProductBase.Keys.Contains(product4));
         }
     }
 }

@@ -8,10 +8,14 @@ namespace Shops.Entities
     public class Shop
     {
         private const int MaxAddressLength = 20;
+        private static int _idGenerator = 0;
+        private readonly int _shopId;
+        private string _shopName;
+        private string _address;
 
         public Shop(string name, string address, double fund)
         {
-            if (Id < 0 || string.IsNullOrEmpty(name) || string.IsNullOrEmpty(address) || fund < 0)
+            if (_shopId < 0 || string.IsNullOrEmpty(name) || string.IsNullOrEmpty(address) || fund < 0)
             {
                 throw new ShopException("Invalid data");
             }
@@ -21,34 +25,26 @@ namespace Shops.Entities
                 throw new ShopException("Invalid address length");
             }
 
-            Id = Id++;
-            Name = name;
-            Address = address;
+            _shopId = _idGenerator++;
+            _shopName = name;
+            _address = address;
             Fund = fund;
             ProductBase = new Dictionary<Product, int>();
         }
 
-        public Dictionary<Product, int> ProductBase { get; private set; }
+        public Dictionary<Product, int> ProductBase { get; }
         public double Fund { get; private set; }
-        public int Id { get; set; }
-        public string Name { get; private set; }
-        public string Address { get; private set; }
 
         public void Transaction(double price)
         {
             Fund -= price;
         }
 
-        public void ChangePrice(Product product, double price)
-        {
-            Product item = ProductBase.Keys.FirstOrDefault(currentProduct => currentProduct == product);
-            if (item != null) item.Price = price;
-        }
+        public override int GetHashCode() => _shopId.GetHashCode();
 
-        public override int GetHashCode() => Id.GetHashCode();
         public override bool Equals(object obj)
         {
-            return obj is Shop shop && shop.Id == Id;
+            return obj is Shop shop && shop._shopId == _shopId;
         }
     }
 }

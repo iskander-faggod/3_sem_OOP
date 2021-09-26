@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using Shops.Tools;
 
 namespace Shops.Entities
 {
@@ -18,6 +20,8 @@ namespace Shops.Entities
 
         public void Transaction(double price)
         {
+            if (price > Fund) throw new ShopException("You don't have that much money");
+            if (price < 0) throw new ShopException($"Invalid price - {price}");
             if (price > 0) Fund -= price;
         }
     }

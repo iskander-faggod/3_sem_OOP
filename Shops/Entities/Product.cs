@@ -17,16 +17,11 @@ namespace Shops.Entities
             Price = price;
         }
 
-        public double Price { get; set; }
+        public double Price { get; }
 
         public string Name { get; }
 
         public override int GetHashCode() => Name.GetHashCode();
-
-        public Product Clone()
-        {
-            return new Product(Name, Price);
-        }
 
         public override bool Equals(object obj)
         {
