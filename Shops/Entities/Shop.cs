@@ -40,6 +40,14 @@ namespace Shops.Entities
             Fund -= price;
         }
 
+        public Product ChangePrice(Product product, double price)
+        {
+            Product item = ProductBase.Keys.FirstOrDefault(currentProduct => Equals(currentProduct, product));
+            if (item is null) throw new ShopException($"Can't find {product.Name} in shop");
+            string name = product.Name;
+            return new Product(name, price);
+        }
+
         public override int GetHashCode() => _shopId.GetHashCode();
 
         public override bool Equals(object obj)

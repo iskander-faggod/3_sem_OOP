@@ -34,12 +34,12 @@ namespace Shops.Tests
             _manager.DeliveryProduct(shop1, product1, 1);
             _manager.DeliveryProduct(shop1, product2, 1);
             _manager.DeliveryProduct(shop1, product3, 1);
-            product2 = new Product("product2", 20);
+            shop1.ChangePrice(product2, 20);
             _manager.DeliveryProduct(shop2, product1, 3);
             _manager.DeliveryProduct(shop2, product2, 4);
-            product2 = new Product("product2", 100);
+            shop2.ChangePrice(product2, 100);
             _manager.DeliveryProduct(shop3, product1, 1000);
-            product2 = new Product("product2", 100);
+            shop3.ChangePrice(product1, 100);
             Shop value = _manager.FindShopWithMinPriceProduct(product2);
             Assert.True(value.ProductBase.Keys.Contains(product2));
             Assert.AreEqual(shop2, value);
