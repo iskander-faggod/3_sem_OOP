@@ -17,9 +17,8 @@ namespace IsuExtra.Entities
             _lessonName = lessonName;
         }
 
-        private DateTime BeginLessonTime { get; }
-
-        private DateTime EndLessonTime { get; }
+        public DateTime BeginLessonTime { get; }
+        public DateTime EndLessonTime { get; }
 
         public override int GetHashCode()
         {

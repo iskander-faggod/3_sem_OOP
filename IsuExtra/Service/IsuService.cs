@@ -115,5 +115,15 @@ namespace IsuExtra.Service
                 .First(currentOgnp => Equals(currentOgnp, ognp)).InformationAboutStreams
                 .SelectMany(stream => stream.InformationAboutStudents())
                 .ToList();
+
+        public bool CheckForTheConflictsInSchedule(Group @group, Stream stream, Lesson oLesson)
+        {
+            if (oLesson is null) throw new IsuExtraException("Invalid ognp value");
+            if (group is null) throw new IsuExtraException("Invalid group value");
+            if (stream is null) throw new IsuExtraException("Invalid stream value");
+            return stream.InformationAboutLessons()
+                .Any(lesson => ((lesson.BeginLessonTime == oLesson.BeginLessonTime) &&
+                                (lesson.EndLessonTime == oLesson.EndLessonTime)));
+        }
     }
 }

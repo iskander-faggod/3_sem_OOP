@@ -38,6 +38,7 @@ namespace IsuExtra.Entities
         }
 
         public IReadOnlyList<Student> InformationAboutStudents() => _studentsList;
+        public IReadOnlyList<Lesson> InformationAboutLessons() => _lessonsList;
         public void AddLesson(Lesson lesson) => _lessonsList.Add(lesson);
 
         public override int GetHashCode()
