@@ -17,7 +17,7 @@ namespace Shops.Tests
         }
 
         [Test]
-        public void FindShopWithMinPrice()
+        public void FindShopWithMinPrice_ShopFound()
         {
             var shops1 = new Shop( "name1", "adress1", 30000);
             var shops2 = new Shop( "name2", "adress2", 40000);
@@ -42,11 +42,30 @@ namespace Shops.Tests
             shop3.ChangePrice(product1, 100);
             Shop value = _manager.FindShopWithMinPriceProduct(product2);
             Assert.True(value.ProductBase.Keys.Contains(product2));
-            Assert.AreEqual(shop2, value);
+            Assert.AreEqual(shop1, value);
+        }
+        
+        [Test]
+        public void FindShopWithMinPriceByFrediCats_ShopFound()
+        {
+            var shops1 = new Shop( "name1", "adress1", 30000);
+            var shops2 = new Shop( "name2", "adress2", 40000);
+            Shop shop1 = _manager.ShopRegistration(shops1);
+            Shop shop2 = _manager.ShopRegistration(shops2);
+
+            var product1 = new Product("product1", 10);
+
+
+            _manager.DeliveryProduct(shop1, product1, 1);
+            shop1.ChangePrice(product1,  20);
+            _manager.DeliveryProduct(shop2, product1, 3);
+            shop2.ChangePrice(product1, 50);
+            Shop value = _manager.FindShopWithMinPriceProduct(product1);
+            Assert.AreEqual(shop1, value);
         }
 
         [Test]
-        public void AddedProductInAShop()
+        public void AddedProductInAShop_True()
         {
             Shop shops1 = new Shop("shop1", "shop1adress", 30000);
             Shop shop1 = _manager.ShopRegistration(shops1);

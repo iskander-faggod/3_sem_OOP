@@ -101,22 +101,11 @@ namespace Shops.Entities
 
         public Shop FindShopWithMinPriceProduct(Product product)
         {
-            try
-            {
-                return ShopsList
-                    .Where(shop => shop.ProductBase.Keys
-                        .Contains(product))
-                    .ToDictionary(
-                        key => key,
-                        value => value.ProductBase.Keys
-                            .FirstOrDefault(currentProduct => Equals(currentProduct, product)))
-                    .Aggregate((current, next) =>
-                        current.Value.Price < next.Value.Price ? current : next).Key;
-            }
-            catch (Exception error)
-            {
-                throw new ShopException("Shop not found", error);
-            }
+            return ShopsList
+                .Where(shop => shop.HasProduct(product))
+                .OrderBy(shop => shop.ProductBase.Keys
+                    .Min(currentProduct => currentProduct.Price))
+                .FirstOrDefault();
         }
 
         private void ShopBuyProducts(Shop currentShop, Product product, int productCount)
