@@ -107,7 +107,7 @@ namespace IsuExtra.Tests
             Assert.True(some.Contains(student2));
             Assert.True(some.Contains(student3));
         }
-        
+
         [Test]
         public void GetInformationAboutConflictsInSchedule()
         {
@@ -123,24 +123,24 @@ namespace IsuExtra.Tests
             var stream = new Stream(1);
             _isuService.RegistratedOgnpOnStream(ognp, stream);
             _isuService.RegisterStudentOnOgnp(student, ognp, stream);
-            
+
             DateTime date1Begin = new DateTime(2021, 9, 28, 8, 20, 0);
             DateTime date1End = date1Begin.AddHours(1.5);
             DateTime date2Begin = new DateTime(2021, 9, 28, 11, 40, 0);
             DateTime date2End = date2Begin.AddHours(1.5);
             DateTime date3Begin = new DateTime(2021, 9, 28, 9, 00, 0);
             DateTime date3End = date3Begin.AddHours(1.5);
+            DateTime date4Begin = new DateTime(2021, 9, 28, 15, 20, 0);
+            DateTime date4End = date3Begin.AddHours(1.5);
             var lesson1 = new Lesson(date1Begin, date1End, 151, "Fredi Cats", "OOP");
             var lesson2 = new Lesson(date2Begin, date2End, 466, "Alexandr Mayatin", "OS");
             var lesson3 = new Lesson(date3Begin, date3End, 337, "Noname professor", "SOS");
-            
+            var lesson4 = new Lesson(date4Begin, date4End, 100, "Noname professor", "HELLO");
+
             stream.AddLesson(lesson1);
             stream.AddLesson(lesson2);
-            stream.AddLesson(lesson3);
-            
-            Assert.True(_isuService.CheckForTheConflictsInSchedule(group, stream, lesson1));
-            Assert.True(_isuService.CheckForTheConflictsInSchedule(group, stream, lesson2));
             Assert.False(_isuService.CheckForTheConflictsInSchedule(group, stream, lesson3));
+            Assert.True(_isuService.CheckForTheConflictsInSchedule(group, stream, lesson4));
         }
     }
 }

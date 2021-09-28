@@ -131,9 +131,9 @@ namespace IsuExtra.Service
             if (oLesson is null) throw new IsuExtraException("Invalid ognp value");
             if (group is null) throw new IsuExtraException("Invalid group value");
             if (stream is null) throw new IsuExtraException("Invalid stream value");
-            return stream.InformationAboutLessons().Any(lesson =>
-                (lesson.EndLessonTime >= oLesson.BeginLessonTime && lesson.EndLessonTime <= oLesson.EndLessonTime) ||
-                (lesson.BeginLessonTime >= oLesson.BeginLessonTime && lesson.BeginLessonTime <= oLesson.EndLessonTime));
+            return stream.InformationAboutLessons()
+                .All(lesson => (lesson.BeginLessonTime > oLesson.EndLessonTime) ||
+                               (lesson.EndLessonTime < oLesson.BeginLessonTime));
         }
     }
 }
