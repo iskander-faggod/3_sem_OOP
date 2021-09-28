@@ -77,9 +77,11 @@ namespace Shops.Entities
                 throw new ShopException("Invalid data");
             }
 
-            shop.ProductBase[product] -= productCount;
-            shop.Transaction(product.Price * productCount);
-            person.Transaction(product.Price * productCount);
+            Product shopProduct = shop.FindShopProduct(product);
+
+            shop.ProductBase[shopProduct] -= productCount;
+            shop.Transaction(shopProduct.Price * productCount);
+            person.Transaction(shopProduct.Price * productCount);
         }
 
         public void BuyProducts(Shop shop, Person person, Dictionary<Product, int> productsBase)

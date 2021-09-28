@@ -19,15 +19,15 @@ namespace Shops.Tests
         [Test]
         public void FindShopWithMinPrice_ShopFound()
         {
-            var shops1 = new Shop( "name1", "adress1", 30000);
-            var shops2 = new Shop( "name2", "adress2", 40000);
-            var shops3= new Shop( "name3", "adress3", 50000);
+            var shops1 = new Shop("name1", "adress1", 30000);
+            var shops2 = new Shop("name2", "adress2", 40000);
+            var shops3 = new Shop("name3", "adress3", 50000);
             Shop shop1 = _manager.ShopRegistration(shops1);
             Shop shop2 = _manager.ShopRegistration(shops2);
             Shop shop3 = _manager.ShopRegistration(shops3);
 
             var product1 = new Product("product1", 10);
-            var product2 = new Product("product2", 1000); 
+            var product2 = new Product("product2", 1000);
             var product3 = new Product("product3", 0);
             var product4 = new Product("product4", 13372281488);
 
@@ -44,23 +44,29 @@ namespace Shops.Tests
             Assert.True(value.ProductBase.Keys.Contains(product2));
             Assert.AreEqual(shop1, value);
         }
-        
+
         [Test]
         public void FindShopWithMinPriceByFrediCats_ShopFound()
         {
-            var shops1 = new Shop( "name1", "adress1", 30000);
-            var shops2 = new Shop( "name2", "adress2", 40000);
+            var shops1 = new Shop("name1", "adress1", 30000);
+            var shops2 = new Shop("name2", "adress2", 40000);
             Shop shop1 = _manager.ShopRegistration(shops1);
             Shop shop2 = _manager.ShopRegistration(shops2);
 
             var product1 = new Product("product1", 10);
-
-
             _manager.DeliveryProduct(shop1, product1, 1);
-            shop1.ChangePrice(product1,  20);
+            shop1.ChangePrice(product1, 20);
+            var person = new Person("Name", 3000);
+
+            Console.WriteLine($"Found before: {person.Fund}");
+            _manager.BuyProduct(shop1, person, product1, 1);
+            Console.WriteLine($"Found after: {person.Fund}");
+
             _manager.DeliveryProduct(shop2, product1, 3);
             shop2.ChangePrice(product1, 50);
+
             Shop value = _manager.FindShopWithMinPriceProduct(product1);
+            Assert.AreEqual(shop1, value);
             Assert.AreEqual(shop1, value);
         }
 
@@ -81,7 +87,7 @@ namespace Shops.Tests
             var product = new Product("name", 1000);
             _manager.ProductRegistration(product);
             var productsList = _manager.ProductsFromManager;
-            Assert.True(productsList.Contains(product)) ;
+            Assert.True(productsList.Contains(product));
         }
 
         [Test]
@@ -91,7 +97,7 @@ namespace Shops.Tests
             Shop shop1 = _manager.ShopRegistration(shops1);
             var productBase = new Dictionary<Product, int>();
             var product1 = new Product("product1", 11);
-            var product2 = new Product("product2", 1); 
+            var product2 = new Product("product2", 1);
             var product3 = new Product("product3", 1);
             var product4 = new Product("product4", 1);
             productBase.Add(product1, 1);
@@ -103,9 +109,9 @@ namespace Shops.Tests
             Assert.True(shop1.ProductBase.Keys.Contains(product2));
             Assert.True(shop1.ProductBase.Keys.Contains(product3));
             Assert.True(shop1.ProductBase.Keys.Contains(product4));
-            Assert.AreEqual(shop1.ProductBase[product1],1);
+            Assert.AreEqual(shop1.ProductBase[product1], 1);
             Assert.AreEqual(shop1.ProductBase[product2], 2);
-            Assert.AreEqual(shop1.ProductBase[product3],3);
+            Assert.AreEqual(shop1.ProductBase[product3], 3);
             Assert.AreEqual(shop1.ProductBase[product4], 4);
 
             var person = new Person("Name", 3000);
@@ -126,7 +132,7 @@ namespace Shops.Tests
             var productBase = new Dictionary<Product, int>();
             var productBase2 = new Dictionary<Product, int>();
             var product1 = new Product("product1", 11);
-            var product2 = new Product("product2", 1); 
+            var product2 = new Product("product2", 1);
             var product3 = new Product("product3", 1);
             var product4 = new Product("product4", 1);
             productBase.Add(product1, 1);

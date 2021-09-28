@@ -17,6 +17,15 @@ namespace Shops.Entities
             Price = price;
         }
 
+        public Product(Product product, double newPrice)
+        {
+            if (product is null) throw new ShopException("Product  is null");
+            if (newPrice <= 0) throw new ShopException("New price must be positive");
+
+            Name = product.Name;
+            Price = newPrice;
+        }
+
         public double Price { get; }
 
         public string Name { get; }

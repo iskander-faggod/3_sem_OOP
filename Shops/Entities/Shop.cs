@@ -40,13 +40,24 @@ namespace Shops.Entities
             Fund -= price;
         }
 
-        public void ChangePrice(Product product, double price)
+        public Product ChangePrice(Product product, double price)
         {
             KeyValuePair<Product, int>? item =
                 ProductBase.FirstOrDefault(currentProduct => Equals(currentProduct.Key, product));
             if (item is null) throw new ShopException($"Can't find {product.Name} in shop");
             ProductBase.Remove(item.Value.Key);
-            ProductBase.Add(product, item.Value.Value);
+            var productWithNewPrice = new Product(product, price);
+            ProductBase.Add(productWithNewPrice, item.Value.Value);
+
+            return productWithNewPrice;
+        }
+
+        public double GetFund() => Fund;
+
+        public Product FindShopProduct(Product product)
+        {
+            if (product is null) throw new ShopException("Product is null");
+            return ProductBase.SingleOrDefault(pair => Equals(pair.Key, product)).Key;
         }
 
         public override int GetHashCode() => _shopId.GetHashCode();
