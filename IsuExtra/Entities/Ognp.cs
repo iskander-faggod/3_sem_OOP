@@ -9,7 +9,6 @@ namespace IsuExtra.Entities
     {
         private readonly List<Stream> _streamsList;
         private readonly string _facultyName;
-
         public Ognp(string facultyName)
         {
             _facultyName = facultyName;
@@ -20,7 +19,7 @@ namespace IsuExtra.Entities
 
         public void AddNewStream(Stream stream)
         {
-            if (stream is null || _streamsList.Contains(stream))
+            if (stream is null)
             {
                 throw new IsuExtraException("Invalid stream");
             }
@@ -40,19 +39,8 @@ namespace IsuExtra.Entities
 
         public string GetFacultyName() => _facultyName;
 
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(_facultyName);
-        }
+        public override int GetHashCode() => HashCode.Combine(_facultyName);
 
-        public override bool Equals(object obj)
-        {
-            if (obj is Ognp ognp)
-            {
-                return ognp._facultyName == _facultyName;
-            }
-
-            return false;
-        }
+        public override bool Equals(object obj) => obj is Ognp ognp && ognp._facultyName == _facultyName;
     }
 }

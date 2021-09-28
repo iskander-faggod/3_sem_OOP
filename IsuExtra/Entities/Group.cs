@@ -19,7 +19,7 @@ namespace IsuExtra.Entities
         private readonly string _groupName;
         private readonly string _facultyName;
 
-        public Group(string groupName, List<Lesson> lessonsList)
+        public Group(string groupName)
         {
             _groupName = groupName;
             _facultyName = Convert.ToString(groupName[0]);
@@ -98,6 +98,7 @@ namespace IsuExtra.Entities
         public string GetFacultyName() => _facultyName;
         public IReadOnlyList<Lesson> InformationAboutLessons() => _lessonsList;
         public IReadOnlyList<Student> InformationAboutStudents() => _studentsList;
+
         public CourseNumber GetCourseNumber() => _courseNumber;
 
         public override int GetHashCode()

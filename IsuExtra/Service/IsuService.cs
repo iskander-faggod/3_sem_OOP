@@ -13,7 +13,7 @@ namespace IsuExtra.Service
         private readonly List<Ognp> _listOgnps;
         private int _studentsId = 0;
 
-        public IsuService(List<Student> listGroups, int id)
+        public IsuService()
         {
             _listGroups = new List<Group>();
             _listOgnps = new List<Ognp>();
@@ -42,7 +42,7 @@ namespace IsuExtra.Service
             }
 
             _studentsId++;
-            var currentStudent = new Student(name, _studentsId, group);
+            var currentStudent = new Student(name, group);
             group.AddStudent(currentStudent);
             return currentStudent;
         }
@@ -62,14 +62,14 @@ namespace IsuExtra.Service
             return new Ognp(facultyName);
         }
 
-        public void RegistratedOgnpOnStream(Ognp ognp, uint streamNumber)
+        public void RegistratedOgnpOnStream(Ognp ognp, Stream stream)
         {
             if (ognp is null)
             {
                 throw new IsuExtraException("Invalid ognp data");
             }
 
-            ognp.AddNewStream(new Stream(streamNumber));
+            ognp.AddNewStream(stream);
         }
 
         public void RegisterStudentOnOgnp(Student student, Ognp ognp, Stream stream)
@@ -110,20 +110,30 @@ namespace IsuExtra.Service
         public List<Group> InformationAboutGroupsWithCurrentCourse(uint courseNumber) =>
             _listGroups.FindAll(group => @group.GetCourseNumber().Number == courseNumber);
 
-        public List<Student> InformationAboutStudentsWithCurrentOgnp(Ognp ognp) =>
-            _listOgnps
-                .First(currentOgnp => Equals(currentOgnp, ognp)).InformationAboutStreams
-                .SelectMany(stream => stream.InformationAboutStudents())
+        public IReadOnlyList<Stream> InformationAboutStreamsWithCurrentCourse(Ognp ognp)
+        {
+            if (ognp is null) throw new IsuExtraException("Invalid ognp data");
+            return ognp.InformationAboutStreams.ToList();
+        }
+
+        public IReadOnlyList<Stream> InformationAboutStudentsWithCurrentOgnp(Ognp ognp) => ognp.InformationAboutStreams;
+
+        public IReadOnlyList<Student> InformationAboutStudentsWithoutOgnp(Group @group)
+        {
+            if (group is null) throw new IsuExtraException("Invalid group data");
+            return group.InformationAboutStudents()
+                .Where(student => student.InformationAboutStudentOgnps().Count == 0)
                 .ToList();
+        }
 
         public bool CheckForTheConflictsInSchedule(Group @group, Stream stream, Lesson oLesson)
         {
             if (oLesson is null) throw new IsuExtraException("Invalid ognp value");
             if (group is null) throw new IsuExtraException("Invalid group value");
             if (stream is null) throw new IsuExtraException("Invalid stream value");
-            return stream.InformationAboutLessons()
-                .Any(lesson => ((lesson.BeginLessonTime == oLesson.BeginLessonTime) &&
-                                (lesson.EndLessonTime == oLesson.EndLessonTime)));
+            return stream.InformationAboutLessons().Any(lesson =>
+                (lesson.EndLessonTime >= oLesson.BeginLessonTime && lesson.EndLessonTime <= oLesson.EndLessonTime) ||
+                (lesson.BeginLessonTime >= oLesson.BeginLessonTime && lesson.BeginLessonTime <= oLesson.EndLessonTime));
         }
     }
 }

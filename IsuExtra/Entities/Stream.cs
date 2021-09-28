@@ -41,19 +41,8 @@ namespace IsuExtra.Entities
         public IReadOnlyList<Lesson> InformationAboutLessons() => _lessonsList;
         public void AddLesson(Lesson lesson) => _lessonsList.Add(lesson);
 
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(_streamNumber);
-        }
+        public override int GetHashCode() => HashCode.Combine(_streamNumber);
 
-        public override bool Equals(object obj)
-        {
-            if (obj is Stream stream)
-            {
-                return stream._streamNumber == _streamNumber;
-            }
-
-            return false;
-        }
+        public override bool Equals(object obj) => obj is Stream stream && stream._streamNumber == _streamNumber;
     }
 }
