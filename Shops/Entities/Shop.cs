@@ -52,8 +52,6 @@ namespace Shops.Entities
             return productWithNewPrice;
         }
 
-        public double GetFund() => Fund;
-
         public Product FindShopProduct(Product product)
         {
             if (product is null) throw new ShopException("Product is null");

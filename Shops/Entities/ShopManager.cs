@@ -8,31 +8,29 @@ namespace Shops.Entities
 {
     public class ShopManager
     {
+        private readonly List<Product> _productsList;
+        private readonly List<Shop> _shopsList;
         public ShopManager()
         {
-            ShopsList = new List<Shop>();
-            ProductsList = new List<Product>();
+            _shopsList = new List<Shop>();
+            _productsList = new List<Product>();
         }
 
-        public IReadOnlyList<Product> ProductsFromManager => ProductsList;
-        private List<Product> ProductsList { get; }
-
-        private List<Shop> ShopsList { get; set; }
-
+        public IReadOnlyList<Product> Products => _productsList;
         public Shop ShopRegistration(Shop shop)
         {
-            ShopsList.Add(shop);
+            _shopsList.Add(shop);
             return shop;
         }
 
         public void ProductRegistration(Product product)
         {
-            if (ProductsList.Contains(product))
+            if (_productsList.Contains(product))
             {
                 throw new ShopException("Product is already register");
             }
 
-            ProductsList.Add(product);
+            _productsList.Add(product);
         }
 
         public void DeliveryProduct(Shop shop, Product product, int productCount)
@@ -42,13 +40,13 @@ namespace Shops.Entities
                 throw new ShopException($"Invalid productCount - {productCount}");
             }
 
-            Shop currentShop = ShopsList.FirstOrDefault(foundedShop => Equals(foundedShop, shop));
+            Shop currentShop = _shopsList.FirstOrDefault(foundedShop => Equals(foundedShop, shop));
             ShopBuyProducts(currentShop, product, productCount);
         }
 
         public void DeliveryProducts(Shop shop, Dictionary<Product, int> productsBase)
         {
-            if (!ShopsList.Contains(shop))
+            if (!_shopsList.Contains(shop))
             {
                 throw new ShopException("Can not find a shop");
             }
@@ -60,7 +58,7 @@ namespace Shops.Entities
 
             double fullPrice = productsBase.Sum(productPair => productPair.Key.Price * productPair.Value);
 
-            foreach (Shop currentShop in ShopsList)
+            foreach (Shop currentShop in _shopsList)
             {
                 currentShop.Transaction(fullPrice);
                 foreach ((Product key, int value) in productsBase)
@@ -103,7 +101,7 @@ namespace Shops.Entities
 
         public Shop FindShopWithMinPriceProduct(Product product)
         {
-            return ShopsList
+            return _shopsList
                 .Where(shop => shop.HasProduct(product))
                 .OrderBy(shop => shop.ProductBase.Keys
                     .Min(currentProduct => currentProduct.Price))

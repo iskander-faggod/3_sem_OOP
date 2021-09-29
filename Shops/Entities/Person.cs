@@ -6,18 +6,18 @@ namespace Shops.Entities
 {
     public class Person
     {
-        private string _name;
-
         public Person(string name, double fund)
         {
-            _name = name;
+            Name = name;
             Fund = fund;
             Id++;
         }
 
+        public string Name { get; }
+
         public double Fund { get; private set; }
 
-        private int Id { get; set; }
+        public int Id { get; }
 
         public void Transaction(double price)
         {

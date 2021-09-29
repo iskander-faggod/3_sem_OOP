@@ -86,7 +86,7 @@ namespace Shops.Tests
         {
             var product = new Product("name", 1000);
             _manager.ProductRegistration(product);
-            var productsList = _manager.ProductsFromManager;
+            var productsList = _manager.Products;
             Assert.True(productsList.Contains(product));
         }
 
