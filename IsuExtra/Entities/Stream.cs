@@ -7,17 +7,17 @@ namespace IsuExtra.Entities
     public class Stream
     {
         private readonly uint _streamNumber;
-        private readonly List<Student> _studentsList;
+        private readonly List<IsuExtraStudent> _studentsList;
         private readonly List<Lesson> _lessonsList;
 
         public Stream(uint streamNumber)
         {
             _streamNumber = streamNumber;
             _lessonsList = new List<Lesson>();
-            _studentsList = new List<Student>();
+            _studentsList = new List<IsuExtraStudent>();
         }
 
-        public void AddStudent(Student student)
+        public void AddStudent(IsuExtraStudent student)
         {
             if (student is null)
             {
@@ -27,7 +27,7 @@ namespace IsuExtra.Entities
             _studentsList.Add(student);
         }
 
-        public void RemoveStudent(Student student)
+        public void RemoveStudent(IsuExtraStudent student)
         {
             if (student is null)
             {
@@ -37,7 +37,7 @@ namespace IsuExtra.Entities
             _studentsList.Remove(student);
         }
 
-        public IReadOnlyList<Student> InformationAboutStudents() => _studentsList;
+        public IReadOnlyList<IsuExtraStudent> InformationAboutStudents() => _studentsList;
         public IReadOnlyList<Lesson> InformationAboutLessons() => _lessonsList;
         public void AddLesson(Lesson lesson) => _lessonsList.Add(lesson);
 

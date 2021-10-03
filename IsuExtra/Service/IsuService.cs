@@ -1,35 +1,36 @@
 using System.Collections.Generic;
 using System.Linq;
-using Isu.Tools;
 using IsuExtra.Entities;
 using IsuExtra.Tools;
-using Microsoft.VisualBasic;
 
 namespace IsuExtra.Service
 {
     public class IsuService
     {
-        private readonly List<Group> _listGroups;
+        private readonly List<IsuExtraGroup> _listGroups;
         private readonly List<Ognp> _listOgnps;
         private int _studentsId = 0;
 
         public IsuService()
         {
-            _listGroups = new List<Group>();
+            _listGroups = new List<IsuExtraGroup>();
             _listOgnps = new List<Ognp>();
         }
 
-        public void AddGroup(Group @group)
+        public IsuExtraGroup AddGroup(string name)
         {
-            if (group is null)
+            var newGroup = new IsuExtraGroup(name);
+
+            if (_listGroups.Contains(newGroup))
             {
-                throw new IsuExtraException("Invalid group data");
+                throw new IsuExtraException("Group is already created");
             }
 
-            _listGroups.Add(group);
+            _listGroups.Add(newGroup);
+            return newGroup;
         }
 
-        public Student AddStudent(Group @group, string name)
+        public IsuExtraStudent AddStudent(IsuExtraGroup @group, string name)
         {
             if (group is null)
             {
@@ -42,7 +43,7 @@ namespace IsuExtra.Service
             }
 
             _studentsId++;
-            var currentStudent = new Student(name, group);
+            var currentStudent = new IsuExtraStudent(name, group, _studentsId);
             group.AddStudent(currentStudent);
             return currentStudent;
         }
@@ -72,7 +73,7 @@ namespace IsuExtra.Service
             ognp.AddNewStream(stream);
         }
 
-        public void RegisterStudentOnOgnp(Student student, Ognp ognp, Stream stream)
+        public void RegisterStudentOnOgnp(IsuExtraStudent student, Ognp ognp, Stream stream)
         {
             if (student is null)
             {
@@ -92,7 +93,7 @@ namespace IsuExtra.Service
             student.EnrollmentOnOgnp(ognp, stream);
         }
 
-        public void UnregisterStudentOnOgnp(Student student, Ognp ognp)
+        public void UnregisterStudentOnOgnp(IsuExtraStudent student, Ognp ognp)
         {
             if (student is null)
             {
@@ -107,8 +108,8 @@ namespace IsuExtra.Service
             student.UnEnrollmentOnOgnp(ognp);
         }
 
-        public List<Group> InformationAboutGroupsWithCurrentCourse(uint courseNumber) =>
-            _listGroups.FindAll(group => @group.GetCourseNumber().Number == courseNumber);
+        public List<IsuExtraGroup> InformationAboutGroupsWithCurrentCourse(uint courseNumber) =>
+            _listGroups.FindAll(group => @group.CourseNumber.Number == courseNumber);
 
         public IReadOnlyList<Stream> InformationAboutStreamsWithCurrentCourse(Ognp ognp)
         {
@@ -118,15 +119,16 @@ namespace IsuExtra.Service
 
         public IReadOnlyList<Stream> InformationAboutStudentsWithCurrentOgnp(Ognp ognp) => ognp.InformationAboutStreams;
 
-        public IReadOnlyList<Student> InformationAboutStudentsWithoutOgnp(Group @group)
+        public IReadOnlyList<IsuExtraStudent> InformationAboutStudentsWithoutOgnp(IsuExtraGroup @group)
         {
             if (group is null) throw new IsuExtraException("Invalid group data");
-            return group.InformationAboutStudents()
+            return @group.StudentsList
+                .Cast<IsuExtraStudent>()
                 .Where(student => student.InformationAboutStudentOgnps().Count == 0)
                 .ToList();
         }
 
-        public bool CheckForTheConflictsInSchedule(Group @group, Stream stream, Lesson oLesson)
+        public bool CheckForTheConflictsInSchedule(IsuExtraGroup @group, Stream stream, Lesson oLesson)
         {
             if (oLesson is null) throw new IsuExtraException("Invalid ognp value");
             if (group is null) throw new IsuExtraException("Invalid group value");

@@ -20,17 +20,17 @@ namespace IsuExtra.Tests
         [Test]
         public void AddNewStudent_True()
         {
-            var group = new Group("M3201");
-            var student = new Student("Iskander Kudashev", group);
+            IsuExtraGroup group = _isuService.AddGroup("M3201");
+            IsuExtraStudent student = _isuService.AddStudent(group, "Iskander Kudashev");
             _isuService.AddStudent(group, student.InformationAboutStudentName());
-            Assert.True(group.InformationAboutStudents().Contains(student));
+            Assert.True(group.StudentsList.Contains(student));
         }
 
         [Test]
         public void RegisterStudentOnOgnp()
         {
-            var group = new Group("M3201");
-            var student = new Student("Iskander Kudashev", group);
+            IsuExtraGroup group = _isuService.AddGroup("M3201");
+            IsuExtraStudent student = _isuService.AddStudent(group, "Iskander Kudashev");
             _isuService.AddStudent(group, student.InformationAboutStudentName());
 
             var ognp = new Ognp("B");
@@ -44,8 +44,8 @@ namespace IsuExtra.Tests
         [Test]
         public void UnregisterStudentOnOgnp()
         {
-            var group = new Group("M3201");
-            var student = new Student("Iskander Kudashev", group);
+            IsuExtraGroup group = _isuService.AddGroup("M3201");
+            IsuExtraStudent student = _isuService.AddStudent(group, "Iskander Kudashev");
             _isuService.AddStudent(group, student.InformationAboutStudentName());
 
             var ognp = new Ognp("B");
@@ -61,8 +61,8 @@ namespace IsuExtra.Tests
         [Test]
         public void GetInformationAboutStreamsByCourseNumber()
         {
-            var group = new Group("M3201");
-            var student = new Student("Iskander Kudashev", group);
+            IsuExtraGroup group = _isuService.AddGroup("M3201");
+            IsuExtraStudent student = _isuService.AddStudent(group, "Iskander Kudashev");
             _isuService.AddStudent(group, student.InformationAboutStudentName());
 
             var ognp = new Ognp("B");
@@ -76,8 +76,8 @@ namespace IsuExtra.Tests
         [Test]
         public void GetInformationAboutStudentsByGroup()
         {
-            var group = new Group("M3201");
-            var student = new Student("Iskander Kudashev", group);
+            IsuExtraGroup group = _isuService.AddGroup("M3201");
+            IsuExtraStudent student = _isuService.AddStudent(group, "Iskander Kudashev");
             _isuService.AddStudent(group, student.InformationAboutStudentName());
 
             var ognp = new Ognp("B");
@@ -91,19 +91,16 @@ namespace IsuExtra.Tests
         [Test]
         public void GetInformationsAboutStudentsWithoutEnrollmentOnOgnp_StudentsListWithOutStudent()
         {
-            var group = new Group("M3201");
-            var student = new Student("Iskander Kudashev", group);
-            var student2 = new Student("Mikhail Libchenko", group);
-            var student3 = new Student("Sasha Miroshichenko", group);
-            _isuService.AddStudent(group, student.InformationAboutStudentName());
-            _isuService.AddStudent(group, student2.InformationAboutStudentName());
-            _isuService.AddStudent(group, student3.InformationAboutStudentName());
+            IsuExtraGroup group = _isuService.AddGroup("M3201");
+            IsuExtraStudent student = _isuService.AddStudent(group, "Iskander Kudashev");
+            IsuExtraStudent student2 = _isuService.AddStudent(group, "Mikhail Libchenko");
+            IsuExtraStudent student3 = _isuService.AddStudent(group, "Sasha Miroshichenko");
 
             var ognp = new Ognp("B");
             var stream = new Stream(1);
             _isuService.RegistratedOgnpOnStream(ognp, stream);
             _isuService.RegisterStudentOnOgnp(student, ognp, stream);
-            IReadOnlyList<Student> some = _isuService.InformationAboutStudentsWithoutOgnp(group);
+            IReadOnlyList<IsuExtraStudent> some = _isuService.InformationAboutStudentsWithoutOgnp(group);
             Assert.True(some.Contains(student2));
             Assert.True(some.Contains(student3));
         }
@@ -111,10 +108,10 @@ namespace IsuExtra.Tests
         [Test]
         public void GetInformationAboutConflictsInSchedule()
         {
-            var group = new Group("M3201");
-            var student = new Student("Iskander Kudashev", group);
-            var student2 = new Student("Mikhail Libchenko", group);
-            var student3 = new Student("Sasha Miroshichenko", group);
+            var group = new IsuExtraGroup("M3201");
+            IsuExtraStudent student = _isuService.AddStudent(group, "Iskander Kudashev");
+            IsuExtraStudent student2 = _isuService.AddStudent(group, "Mikhail Libchenko");
+            IsuExtraStudent student3 = _isuService.AddStudent(group, "Sasha Miroshichenko"); 
             _isuService.AddStudent(group, student.InformationAboutStudentName());
             _isuService.AddStudent(group, student2.InformationAboutStudentName());
             _isuService.AddStudent(group, student3.InformationAboutStudentName());

@@ -40,6 +40,7 @@ namespace Isu.Entities
 
         public string GroupName { get; }
         public List<Student> StudentsList { get; }
+
         public void AddStudent(Student student)
         {
             if (!IsStudentInGroup(student))
@@ -93,10 +94,8 @@ namespace Isu.Entities
         {
             if (obj is Group @group)
             {
-                return @group.CourseNumber == CourseNumber
-                       && @group.GroupName == GroupName
-                       && @group.GroupNumber == GroupNumber
-                       && @group.StudentsList == StudentsList;
+                return @group.GroupName == GroupName
+                       && @group.GroupNumber == GroupNumber;
             }
 
             return false;
