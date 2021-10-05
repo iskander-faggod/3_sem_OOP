@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Isu.Services;
 using Isu.Tools;
 using static Isu.Entities.CourseNumber;
@@ -10,19 +11,19 @@ namespace Isu.Entities
 {
     public class IsuService : IIsuService
     {
-        private readonly List<Group> _groups;
+        private readonly List<Group<Student>> _groups;
         private readonly int _maxGroupSize;
         public IsuService(int maxGroupSize)
         {
-            _groups = new List<Group>();
+            _groups = new List<Group<Student>>();
             _maxGroupSize = maxGroupSize;
         }
 
         private int Id { get;  set; } = 0;
 
-        public Group AddGroup(string name)
+        public Group<Student> AddGroup(string name)
         {
-            var newGroup = new Group(name);
+            var newGroup = new Group<Student>(name);
 
             if (_groups.Contains(newGroup))
             {
@@ -33,7 +34,7 @@ namespace Isu.Entities
             return newGroup;
         }
 
-        public Student AddStudent(Group group, string name)
+        public Student AddStudent(Group<Student> group, string name)
         {
             if (group.GetGroupSize() > _maxGroupSize)
             {
@@ -88,22 +89,22 @@ namespace Isu.Entities
                 .FirstOrDefault();
         }
 
-        public Group FindGroup(string groupName)
+        public Group<Student> FindGroup(string groupName)
         {
             return _groups
                 .FirstOrDefault(group => @group.GroupName == groupName);
         }
 
-        public List<Group> FindGroups(CourseNumber courseNumber)
+        public List<Group<Student>> FindGroups(CourseNumber courseNumber)
         {
             return _groups
                 .Where(@group => @group.CourseNumber.Number == courseNumber.Number)
                 .ToList();
         }
 
-        public void ChangeStudentGroup(Student student, Group newGroup)
+        public void ChangeStudentGroup(Student student, Group<Student> newGroup)
         {
-            foreach (Group group in _groups)
+            foreach (Group<Student> group in _groups)
             {
                     group.RemoveStudent(student);
                     newGroup.AddStudent(student);

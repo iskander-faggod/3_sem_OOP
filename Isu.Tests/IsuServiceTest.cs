@@ -21,7 +21,7 @@ namespace Isu.Tests
         [Test]
         public void AddStudentToGroup_StudentHasGroupAndGroupContainsStudent()
         {
-            Group m3101 = IsuService.AddGroup("M3101");
+            Group<Student> m3101 = IsuService.AddGroup("M3101");
             Student newStudent1 = IsuService.AddStudent(m3101, "Iskander");
             Student newStudent2= IsuService.AddStudent(m3101, "Sasha");
             Student newStudent3 = IsuService.AddStudent(m3101, "Misha");
@@ -36,7 +36,7 @@ namespace Isu.Tests
         {
             Assert.Catch<IsuException>(() =>
             {
-                Group @group = IsuService.AddGroup("M3201");
+                Group<Student> @group = IsuService.AddGroup("M3201");
                 for (int i = 0; i < 28; i++)
                 {
                     IsuService.AddStudent(group, "crash");
@@ -48,15 +48,15 @@ namespace Isu.Tests
         {
             Assert.Catch<IsuException>(() =>
             {
-                Group group = IsuService.AddGroup("M3222201");
+                Group<Student> group = IsuService.AddGroup("M3222201");
             });
         }
 
         [Test]
         public void TransferStudentToAnotherGroup_GroupChanged()
         {
-            Group oldGroup = IsuService.AddGroup("M3108");
-            Group newGroup = IsuService.AddGroup("M3201");
+            Group<Student> oldGroup = IsuService.AddGroup("M3108");
+            Group<Student> newGroup = IsuService.AddGroup("M3201");
             Student newStudent = IsuService.AddStudent(oldGroup, "NewIskander");
             IsuService.AddStudent(oldGroup, "NewIskander");
             IsuService.ChangeStudentGroup(newStudent, newGroup);
