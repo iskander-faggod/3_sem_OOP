@@ -123,7 +123,6 @@ namespace IsuExtra.Service
         {
             if (group is null) throw new IsuExtraException("Invalid group data");
             return @group.StudentsList
-                .Cast<IsuExtraStudent>()
                 .Where(student => student.InformationAboutStudentOgnps().Count == 0)
                 .ToList();
         }

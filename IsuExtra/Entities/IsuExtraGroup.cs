@@ -7,11 +7,8 @@ using IsuExtra.Tools;
 
 namespace IsuExtra.Entities
 {
-    public class IsuExtraGroup : Group
+    public class IsuExtraGroup : Group<IsuExtraStudent>
     {
-        private const int MaxGroupNumber = 14;
-        private const int MaxCourseNumber = 4;
-        private const int MaxGroupLength = 5;
         private readonly List<Lesson> _lessonsList;
         private readonly string _facultyName;
 
@@ -24,7 +21,9 @@ namespace IsuExtra.Entities
 
         public IsuExtraStudent FindStudent(IsuExtraStudent currentStudent)
         {
-            return (IsuExtraStudent)StudentsList.FirstOrDefault(student => Equals(student, currentStudent));
+            if (currentStudent is null) throw new IsuExtraException("Invalid student data");
+            if (!StudentsList.Contains(currentStudent)) throw new IsuExtraException("Student not registered");
+            return StudentsList.FirstOrDefault(student => Equals(student, currentStudent));
         }
 
         public void AddLesson(Lesson lesson)

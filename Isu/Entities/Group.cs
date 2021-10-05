@@ -6,7 +6,8 @@ using Isu.Tools;
 
 namespace Isu.Entities
 {
-    public class Group
+    public class Group<T>
+        where T : Student
     {
         private const int MaxGroupNumber = 14;
         private const int MaxCourseNumber = 4;
@@ -32,16 +33,16 @@ namespace Isu.Entities
                 throw new IsuException($"Invalid group, with name - {groupName}");
             }
 
-            StudentsList = new List<Student>();
+            StudentsList = new List<T>();
         }
 
         public CourseNumber CourseNumber { get; }
         public uint GroupNumber { get; }
 
         public string GroupName { get; }
-        public List<Student> StudentsList { get; }
+        public List<T> StudentsList { get; private set; }
 
-        public void AddStudent(Student student)
+        public void AddStudent(T student)
         {
             if (!IsStudentInGroup(student))
             {
@@ -53,7 +54,7 @@ namespace Isu.Entities
             }
         }
 
-        public void RemoveStudent(Student student)
+        public void RemoveStudent(T student)
         {
             if (!IsStudentInGroup(student))
             {
@@ -75,7 +76,7 @@ namespace Isu.Entities
                    throw new IsuException($"Invalid student with name - {name}");
         }
 
-        public bool IsStudentInGroup(Student student)
+        public bool IsStudentInGroup(T student)
         {
             return StudentsList.Contains(student);
         }
@@ -92,10 +93,9 @@ namespace Isu.Entities
 
         public override bool Equals(object? obj)
         {
-            if (obj is Group @group)
+            if (obj is Group<T> @group)
             {
-                return @group.GroupName == GroupName
-                       && @group.GroupNumber == GroupNumber;
+                return group.GroupNumber == GroupNumber;
             }
 
             return false;
