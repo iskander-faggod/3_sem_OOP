@@ -34,6 +34,7 @@ namespace Backups
             {
                 string zipeFilePath2 = CreateZipFile(dir, file.Item2);
                 using ZipArchive archive = ZipFile.Open(zipeFilePath2, ZipArchiveMode.Update);
+                archive.GetEntry(zipeFilePath2);
                 archive.CreateEntryFromFile(file.Item1 + file.Item2, file.Item2, CompressionLevel.Optimal);
             }
         }

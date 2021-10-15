@@ -11,12 +11,12 @@ namespace Backups.Entities
         private DateTime _creationTime;
         private string _restorePointPath;
 
-        public RestorePoint(DateTime creationTime, string restorePointPath)
+        public RestorePoint(string restorePointPath, List<FileDescription> filesToCopy)
         {
             if (string.IsNullOrEmpty(restorePointPath)) throw new BackupsException("Point path incorrect");
             _restorePointPath = restorePointPath;
-            _creationTime = creationTime;
-            _filesToCopy = new List<FileDescription>();
+            _filesToCopy = filesToCopy;
+            _creationTime = DateTime.Now;
         }
 
         public IReadOnlyList<FileDescription> GetRestorePointFilesInfo() => _filesToCopy;

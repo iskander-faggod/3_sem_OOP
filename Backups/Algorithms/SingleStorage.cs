@@ -24,6 +24,7 @@ namespace Backups.Algorithms
                 using ZipArchive zipArchive = ZipFile.Open(zipFilePath, ZipArchiveMode.Create);
                 foreach (FileDescription file in backUpJob.GetBackUpFiles())
                     zipArchive.CreateEntryFromFile(file.GetFileFullPath(), file.GetFileName());
+                zipArchive.Dispose();
             }
             catch (Exception error)
             {
