@@ -3,6 +3,7 @@ using System.IO;
 using System.IO.Compression;
 using Backups.Algorithms.Intrerfaces;
 using Backups.Entities;
+using Backups.Tools;
 
 namespace Backups.Algorithms
 {
@@ -10,27 +11,23 @@ namespace Backups.Algorithms
     {
         public string CompressFileToZip(string pointPath, string fileName)
         {
-            return $"{pointPath}/{fileName}";
+            return $"{pointPath}/{fileName}.zip";
         }
 
         public void SaveFile(string pointPath, BackUpJob backUpJob)
         {
-            string pathToZip = CompressFileToZip(pointPath, backUpJob.GetBackUpName());
+            if (string.IsNullOrEmpty(pointPath)) throw new BackupsException("RestorePoint path is invalid");
+            if (backUpJob is null) throw new BackupsException("BackUpJob is null");
             try
             {
-                ZipFile.CreateFromDirectory(pointPath, pathToZip);
+                string zipFilePath = CompressFileToZip(pointPath, backUpJob.GetBackUpName());
+                using ZipArchive zipArchive = ZipFile.Open(zipFilePath, ZipArchiveMode.Create);
+                foreach (FileDescription file in backUpJob.GetBackUpFiles())
+                    zipArchive.CreateEntryFromFile(file.GetFileFullPath(), file.GetFileName());
             }
-            catch (Exception e)
+            catch (Exception error)
             {
-                Console.WriteLine(e.Message);
-            }
-
-            var zipToOpen = new FileStream(pathToZip, FileMode.Open);
-            var archive = new ZipArchive(zipToOpen, ZipArchiveMode.Update);
-
-            foreach (FileDescription archEntry in backUpJob.GetBackUpFiles())
-            {
-                archive.CreateEntryFromFile(archEntry.GetFilePath(), archEntry.GetFileName());
+                throw new BackupsException("SaveFile method is denied", error);
             }
         }
     }
