@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using Backups.Algorithms;
+using Backups.Algorithms.Intrerfaces;
 using Backups.Entities;
 
 namespace Backups
@@ -18,25 +19,18 @@ namespace Backups
         private static void Main()
         {
             // Test - 2
-            string zipeFilePath = "/home/iskander/Desktop/iskander-faggod/Backups/";
-            var files = new List<(string, string)>
-            {
-                (zipeFilePath + "Source/", "file1.txt"),
-                (zipeFilePath + "Source/", "file2.txt"),
-            };
-            /*using ZipArchive zipArchive = ZipFile.Open(zipeFilePath + "Zip/arc.zip", ZipArchiveMode.Create);
-            foreach ((string, string) file in files)
-                zipArchive.CreateEntryFromFile(file.Item1 + file.Item2, file.Item2);*/
+            string zipeFilePath = "/home/iskander/Desktop/iskander-faggod/Backups";
 
-            // Test -1
-            string dir = Directory.CreateDirectory(zipeFilePath + $"Zip/{DateTime.Now:f}").FullName;
-            foreach ((string, string) file in files)
-            {
-                string zipeFilePath2 = CreateZipFile(dir, file.Item2);
-                using ZipArchive archive = ZipFile.Open(zipeFilePath2, ZipArchiveMode.Update);
-                archive.GetEntry(zipeFilePath2);
-                archive.CreateEntryFromFile(file.Item1 + file.Item2, file.Item2, CompressionLevel.Optimal);
-            }
+            var file1 = new FileDescription("main1.txt", zipeFilePath + "/Source/");
+            var file2 = new FileDescription("main2.txt", zipeFilePath + "/Source/");
+            var file3 = new FileDescription("main3.txt", zipeFilePath + "/Source/");
+            var objectJob = new ObjectJob();
+            objectJob.AddFile(file1);
+            objectJob.AddFile(file2);
+            objectJob.AddFile(file3);
+
+            var backupJob = new BackUpJob(zipeFilePath + "/Zip/", "Single", new SingleStorage());
+            backupJob.AddPoint(objectJob);
         }
     }
 }

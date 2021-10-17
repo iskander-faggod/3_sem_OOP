@@ -20,7 +20,7 @@ namespace Backups.Algorithms
             if (backUpJob is null) throw new BackupsException("BackUpJob is null");
             try
             {
-                string zipFilePath = CompressFileToZip(pointPath, backUpJob.GetBackUpName());
+                string zipFilePath = CompressFileToZip(pointPath, $"{backUpJob.GetBackUpName()}|{DateTime.Now:f}");
                 using ZipArchive zipArchive = ZipFile.Open(zipFilePath, ZipArchiveMode.Create);
                 foreach (FileDescription file in backUpJob.GetBackUpFiles())
                     zipArchive.CreateEntryFromFile(file.GetFileFullPath(), file.GetFileName());
