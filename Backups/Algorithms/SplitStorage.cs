@@ -17,10 +17,14 @@ namespace Backups.Algorithms
         public void SaveFile(string pointPath, BackUpJob backUpJob)
         {
             if (backUpJob is null) throw new BackupsException("BackUpJob is incorrect");
+            string zipDir = Directory.CreateDirectory(backUpJob.GetBackUpPath() +
+                                                      "/" + backUpJob.GetBackUpName() + "/" +
+                                                      $"{backUpJob.GetBackUpName() + "_" + backUpJob.GetRestorePointsSize()}|{DateTime.Now:f}").FullName;
+
             foreach (FileDescription file in backUpJob.GetBackUpFiles())
             {
-                string zipFile = CompressFileToZip(pointPath, $"{backUpJob.GetBackUpName()}|{DateTime.Now:f}");
-                using ZipArchive archive = ZipFile.Open(zipFile, ZipArchiveMode.Create);
+                string zipFilePath = CompressFileToZip(zipDir, $"{file.GetFileName()}|{DateTime.Now:f}");
+                using ZipArchive archive = ZipFile.Open(zipFilePath, ZipArchiveMode.Create);
                 archive.CreateEntryFromFile(file.GetFileFullPath(), file.GetFileName());
                 archive.Dispose();
             }

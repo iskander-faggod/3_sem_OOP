@@ -18,18 +18,12 @@ namespace Backups.Algorithms
         {
             if (string.IsNullOrEmpty(pointPath)) throw new BackupsException("RestorePoint path is invalid");
             if (backUpJob is null) throw new BackupsException("BackUpJob is null");
-            try
-            {
-                string zipFilePath = CompressFileToZip(pointPath, $"{backUpJob.GetBackUpName()}|{DateTime.Now:f}");
-                using ZipArchive zipArchive = ZipFile.Open(zipFilePath, ZipArchiveMode.Create);
-                foreach (FileDescription file in backUpJob.GetBackUpFiles())
-                    zipArchive.CreateEntryFromFile(file.GetFileFullPath(), file.GetFileName());
-                zipArchive.Dispose();
-            }
-            catch (Exception error)
-            {
-                throw new BackupsException("SaveFile method is denied", error);
-            }
+
+            string zipFilePath = CompressFileToZip(pointPath, $"{backUpJob.GetBackUpName()}|{DateTime.Now:O}");
+            using ZipArchive zipArchive = ZipFile.Open(zipFilePath, ZipArchiveMode.Create);
+            foreach (FileDescription file in backUpJob.GetBackUpFiles())
+                zipArchive.CreateEntryFromFile(file.GetFileFullPath(), file.GetFileName());
+            zipArchive.Dispose();
         }
     }
 }

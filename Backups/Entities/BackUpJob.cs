@@ -24,21 +24,29 @@ namespace Backups.Entities
             _backUpName = backUpName;
         }
 
-        public void SetALgorithmType(IAlgorithm type)
+        public void SetAlgorithmType(IAlgorithm type)
         {
             _algorithm = type ?? throw new BackupsException("Type is incorrect");
         }
 
-        public void AddPoint(ObjectJob objectJob)
+        public void AddPoint(List<FileDescription> filesToCopy)
         {
-            _backUpFiles.AddRange(objectJob.GetObjectJobFilesInfo());
-            var restorePoint = new RestorePoint(_backUpPath, objectJob);
-            _algorithm.SaveFile(_backUpPath, this);
+            _backUpFiles.AddRange(filesToCopy);
+            var restorePoint = new RestorePoint(_backUpPath, new List<FileDescription>(filesToCopy));
             _restorePoints.Add(restorePoint);
+            _algorithm.SaveFile(_backUpPath, this);
+            _backUpFiles.Clear();
+        }
+
+        public void RemovePoint(RestorePoint restorePoint)
+        {
+            if (restorePoint is null) throw new BackupsException("RestorePoint is invalid");
+            _restorePoints.Remove(restorePoint);
         }
 
         public IReadOnlyList<FileDescription> GetBackUpFiles() => _backUpFiles;
         public IReadOnlyList<RestorePoint> GetRestorePoints() => _restorePoints;
+        public int GetRestorePointsSize() => _restorePoints.Count + 1;
         public string GetBackUpPath() => _backUpPath;
         public string GetBackUpName() => _backUpName;
         public IAlgorithm GetBackUpAlgorithmType() => _algorithm;
