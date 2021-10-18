@@ -12,6 +12,7 @@ namespace Backups.Tests
         string zipeFilePath = "/home/iskander/Desktop/iskander-faggod/Backups/";
 
         [Test]
+        [Ignore("FileSystem doesn't work in GitHub CI")]
         public void AddTwoFilesSingleStorage()
         {
             var file1 = new FileDescription("main1.txt", zipeFilePath + "Source/");
