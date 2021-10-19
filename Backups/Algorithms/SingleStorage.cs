@@ -15,13 +15,16 @@ namespace Backups.Algorithms
         {
             if (backUpJob is null) throw new BackupsException("BackUpJob is null");
             string storageName = $"{Math.Abs(Guid.NewGuid().ToString("D").GetHashCode())}|{DateTime.Now:h:mm:ss}";
-            string zipFilePath = GetFileZipPath(backUpJob.GetBackUpName(), storageName);
+            string zipDir = Directory
+                .CreateDirectory($"{Math.Abs(Guid.NewGuid().ToString("D").GetHashCode())}|{DateTime.Now:h:mm:ss}")
+                .FullName;
+            string zipFilePath = GetFileZipPath(zipDir, storageName);
             ZipArchive zipArchive = ZipFile.Open(zipFilePath, ZipArchiveMode.Create);
             foreach (FileDescription file in backUpJob.GetBackUpFiles())
                 zipArchive.CreateEntryFromFile(file.GetFileFullPath(), file.GetFileName());
             zipArchive.Dispose();
             byte[] archiveBytes = File.ReadAllBytes(zipFilePath);
-            restorePoint.AddStorage(archiveBytes, zipFilePath);
+            restorePoint.AddStorage(archiveBytes, storageName);
         }
     }
 }

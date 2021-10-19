@@ -19,7 +19,6 @@ namespace Backups
             var file1 = new FileDescription("main1.txt", zipFilePath + "/Source/");
             var file2 = new FileDescription("main2.txt", zipFilePath + "/Source/");
 
-            // TODO: Use collection initialization syntax
             var files = new List<FileDescription>
             {
                 file1,

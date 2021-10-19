@@ -30,7 +30,6 @@ namespace Backups.Algorithms
                 ZipArchive archive = ZipFile.Open(zipFilePath, ZipArchiveMode.Create);
                 archive.CreateEntryFromFile(file.GetFileFullPath(), file.GetFileName());
 
-                // TODO: Use modern 'using' keyword syntax
                 archive.Dispose();
                 byte[] archiveBytes = File.ReadAllBytes(zipFilePath);
                 restorePoint.AddStorage(archiveBytes, fileName);
