@@ -1,3 +1,4 @@
+using System.IO;
 using Backups.Tools;
 
 namespace Backups.Entities
@@ -11,6 +12,9 @@ namespace Backups.Entities
         {
             if (string.IsNullOrEmpty(fileName)) throw new BackupsException("FileName incorrect");
             if (string.IsNullOrEmpty(filePath)) throw new BackupsException("FilePath incorrect");
+            /*if (File.Exists($"/home/iskander/Desktop/iskander-faggod/Backups/Source/{filePath}"))
+                throw new BackupsException("File with this FileName is already exists");*/
+
             _fileName = fileName;
             _filePath = filePath;
         }

@@ -7,22 +7,26 @@ namespace Backups.Entities
 {
     public class RestorePoint
     {
-        private List<FileDescription> _filesToCopy;
-        private DateTime _creationTime;
-        private string _restorePointPath;
+        private readonly DateTime _creationTime;
+        private readonly BackUpJob _backUpJob;
+        private readonly List<Storage> _storages;
 
-        public RestorePoint(string restorePointPath, List<FileDescription> filesToCopy)
+        public RestorePoint(BackUpJob backUpJob)
         {
-            if (string.IsNullOrEmpty(restorePointPath)) throw new BackupsException("Point path incorrect");
-            _restorePointPath = restorePointPath;
-            _filesToCopy = filesToCopy;
+            _backUpJob = backUpJob ?? throw new BackupsException("BackUpJob is invalid");
+            _storages = new List<Storage>();
             _creationTime = DateTime.Now;
         }
 
-        public void AddRestorePointsFiles(List<FileDescription> newFiles) => _filesToCopy.AddRange(newFiles);
+        public void AddStorage(byte[] bytes, string name)
+        {
+            if (bytes is null) throw new BackupsException("Bytes are null");
+            if (string.IsNullOrEmpty(name)) throw new BackupsException("Name is invalid");
+            _storages.Add(new Storage(bytes, name));
+        }
 
-        public IReadOnlyList<FileDescription> GetRestorePointFilesInfo() => _filesToCopy;
         public DateTime GetRestorePointCreationTime() => _creationTime;
-        public string GetRestorePointPath() => _restorePointPath;
+        public BackUpJob GetBackUpJobInfo() => _backUpJob;
+        public IReadOnlyList<Storage> GetStorages() => _storages;
     }
 }

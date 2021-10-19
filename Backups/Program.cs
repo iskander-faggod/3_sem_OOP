@@ -5,31 +5,29 @@ using System.IO.Compression;
 using Backups.Algorithms;
 using Backups.Algorithms.Intrerfaces;
 using Backups.Entities;
+using Backups.Repositories;
 
 namespace Backups
 {
     internal class Program
     {
-        public static string CreateZipFile(string restorePointPath, string fileName)
-        {
-            string zipFile = $"{restorePointPath}/{fileName}.zip";
-            return zipFile;
-        }
-
         private static void Main()
         {
             // Test - 2
-            string zipeFilePath = "/home/iskander/Desktop/iskander-faggod/Backups/";
+            const string zipFilePath = "/home/iskander/Desktop/iskander-faggod/Backups";
+            var repository = new FilesRepository(zipFilePath + "/Repository");
+            var file1 = new FileDescription("main1.txt", zipFilePath + "/Source/");
+            var file2 = new FileDescription("main2.txt", zipFilePath + "/Source/");
 
-            var file1 = new FileDescription("main1.txt", zipeFilePath + "Source/");
-            var file2 = new FileDescription("main2.txt", zipeFilePath + "Source/");
-            var files = new List<FileDescription>();
+            // TODO: Use collection initialization syntax
+            var files = new List<FileDescription>
+            {
+                file1,
+                file2,
+            };
 
-            files.Add(file1);
-            files.Add(file2);
-
-            var backupJob = new BackUpJob(zipeFilePath + "Zip/", "Archive", new SplitStorage());
-            backupJob.AddPoint(files);
+            var backupJob = new BackUpJob("BackupJOBA", new SingleStorage());
+            repository.CreateRepository(backupJob, files);
         }
     }
 }

@@ -13,7 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="D:\coding\itmo-mentor\OopLabs-template\.editorconfig" />
+    <None Remove="Repository\**" />
+    <None Remove="Source\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,7 +25,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Zip" />
+    <Compile Remove="Repository\**" />
+    <Compile Remove="Source\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="Repository\**" />
+    <EmbeddedResource Remove="Source\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Repository\BackupJOBA" />
   </ItemGroup>
 
 </Project>
