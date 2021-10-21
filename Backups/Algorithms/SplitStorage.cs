@@ -18,8 +18,7 @@ namespace Backups.Algorithms
         {
             if (backUpJob is null) throw new BackupsException("BackUpJob is incorrect");
             if (restorePoint is null) throw new BackupsException("RestorePoint is incorrect");
-            string path =
-                $"{backUpJob.GetBackUpName() + "_" + Guid.NewGuid().ToString("D").GetHashCode()}|{DateTime.Now:h:mm:ss}";
+            string path = Path.Join(backUpJob.GetBackUpName(), "_", Guid.NewGuid().ToString("D").GetHashCode().ToString(), "|", DateTime.Now.ToString("h:mm:ss"));
             if (File.Exists(path)) throw new BackupsException("File with this path was created");
             string dir = Directory
                 .CreateDirectory(path).FullName;

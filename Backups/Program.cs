@@ -13,19 +13,16 @@ namespace Backups
     {
         private static void Main()
         {
-            // Test - 2
             const string zipFilePath = "/home/iskander/Desktop/iskander-faggod/Backups";
             var repository = new FilesRepository(zipFilePath + "/Repository");
             var file1 = new FileDescription("main1.txt", zipFilePath + "/Source/");
             var file2 = new FileDescription("main2.txt", zipFilePath + "/Source/");
 
-            var files = new List<FileDescription>
-            {
-                file1,
-                file2,
-            };
+            var backupJob = new BackUpJob("TestBackUpJob", new SingleStorage());
 
-            var backupJob = new BackUpJob("BackupJOBA", new SingleStorage());
+            var files = new List<FileDescription> { file1, file2 };
+
+            backupJob.AddPoint(files);
             repository.CreateRepository(backupJob, files);
         }
     }

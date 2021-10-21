@@ -21,16 +21,16 @@ namespace Backups.Repositories
 
         public void CreateRepository(BackUpJob backUpJob, List<FileDescription> files)
         {
-            backUpJob.AddPoint(files);
             RestorePoint lastRestorePoint = backUpJob.GetLastRestorePoint();
-            Directory.CreateDirectory(_path + "/" + backUpJob.GetBackUpName() + "/" + $"{DateTime.Now:F}");
+            string dirPath = Path.Join(_path, "/", backUpJob.GetBackUpName(), "/", $"{DateTime.Now:F}");
+            Directory.CreateDirectory(dirPath);
             foreach (Storage storage in lastRestorePoint.GetStorages())
             {
                 byte[] bytes = storage.GetStorageBytesInfo();
                 string name = storage.GetStorageName();
 
                 // TODO: Use platform specific path separator and string interpolation
-                File.WriteAllBytes(_path + "/" + backUpJob.GetBackUpName() + "/" + $"{DateTime.Now:F}" + "/" + name + ".zip", bytes);
+                File.WriteAllBytes(Path.Join(dirPath, "/", $"{name}.zip"), bytes);
             }
         }
     }
