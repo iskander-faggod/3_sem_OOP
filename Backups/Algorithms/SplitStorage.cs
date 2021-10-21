@@ -11,7 +11,6 @@ namespace Backups.Algorithms
 {
     public class SplitStorage : IAlgorithm
     {
-        // TODO: Move to BaseAlgorithm, since methods are identical. Also fix naming, Method does not compress anything.
         public string GetFileZipPath(string pointPath, string fileName) => Path.Join(pointPath, $"{fileName}.zip");
 
         public void SaveFile(BackUpJob backUpJob, RestorePoint restorePoint)

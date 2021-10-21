@@ -22,7 +22,6 @@ namespace Backups.Entities
             _backUpName = backUpName;
         }
 
-        // TODO: Consider using Builder pattern to create Backup object that is using specific algorithm.
         public void SetAlgorithmType(IAlgorithm type)
         {
             _algorithm = type ?? throw new BackupsException("Type is incorrect");
@@ -44,8 +43,6 @@ namespace Backups.Entities
         {
             if (restorePoint is null) throw new BackupsException("RestorePoint is invalid");
             if (_restorePoints.Contains(restorePoint)) throw new BackupsException("RestoreFile is already exist");
-
-            // TODO: Check that restore point do exist.
             _restorePoints.Remove(restorePoint);
         }
 

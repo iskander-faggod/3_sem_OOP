@@ -28,8 +28,6 @@ namespace Backups.Repositories
             {
                 byte[] bytes = storage.GetStorageBytesInfo();
                 string name = storage.GetStorageName();
-
-                // TODO: Use platform specific path separator and string interpolation
                 File.WriteAllBytes(Path.Join(dirPath, "/", $"{name}.zip"), bytes);
             }
         }
