@@ -13,7 +13,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="D:\coding\itmo-mentor\OopLabs-template\.editorconfig" />
+    <None Remove="Repository\**" />
+    <None Remove="Source\**" />
+    <None Remove="obj\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,6 +23,22 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Repository\**" />
+    <Compile Remove="Source\**" />
+    <Compile Remove="obj\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="Repository\**" />
+    <EmbeddedResource Remove="Source\**" />
+    <EmbeddedResource Remove="obj\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Repository\BackupJOBA" />
   </ItemGroup>
 
 </Project>
