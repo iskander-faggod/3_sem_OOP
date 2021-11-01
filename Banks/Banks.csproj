@@ -5,15 +5,15 @@
     <TargetFramework>net5.0</TargetFramework>
     <WarningLevel>5</WarningLevel>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-    <Nullable>enable</Nullable>
+    <Nullable>disable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <EditorConfigFiles Remove="D:\coding\itmo-mentor\OopLabs-template\.editorconfig" />
+    <EditorConfigFiles Remove="..\.editorconfig" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="D:\coding\itmo-mentor\OopLabs-template\.editorconfig" />
+    <None Include="..\.editorconfig" />
   </ItemGroup>
 
   <ItemGroup>

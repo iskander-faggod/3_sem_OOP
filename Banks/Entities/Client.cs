@@ -1,27 +1,58 @@
-using Banks.Entities.Accounts.Interfaces;
+using System;
+using Banks.Entities.AccountsModel.Creator;
 using Banks.Tools;
 
 namespace Banks.Entities
 {
-    public class Client
+    public class Client : IEquatable<Client>
     {
-        private string _name;
-        private string _surname;
-        private string? _address;
-        private int? _passportId;
-        private IAccount _accountType;
-
-        public Client(string name, string surname, string? address, int? passportId, IAccount accountType)
+        public Client(string name, string surname, string address = null, string passportId = null)
         {
             if (string.IsNullOrEmpty(name)) throw new BanksException($"Invalid name - {name}");
             if (string.IsNullOrEmpty(surname)) throw new BanksException($"Invalid surname - {surname}");
-            if (string.IsNullOrEmpty(address)) throw new BanksException($"Invalid address - {address}");
-            if (passportId < 1000000000) throw new BanksException($"Invalid passport id  - {passportId}");
-            _name = name;
-            _surname = surname;
-            _address = address;
-            _passportId = passportId;
-            _accountType = accountType ?? throw new BanksException("Invalid account type");
+            if (address == string.Empty) throw new BanksException("Invalid address");
+            Name = name;
+            Surname = surname;
+            Address = address;
+            PassportId = passportId;
+        }
+
+        public string Name { get; }
+        public string Surname { get; }
+        public string Address { get; private set; }
+        public string PassportId { get; private set; }
+        public bool IsSuspicious => string.IsNullOrWhiteSpace(Address) || string.IsNullOrWhiteSpace(PassportId);
+
+        public void SetPassport(string passportId)
+        {
+            if (string.IsNullOrWhiteSpace(passportId)) throw new BanksException("Invalid passport id");
+            PassportId = passportId;
+        }
+
+        public void SetAddress(string address)
+        {
+            if (string.IsNullOrWhiteSpace(address)) throw new BanksException("Invalid address id");
+            Address = address;
+        }
+
+        public bool Equals(Client other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Name == other.Name && Surname == other.Surname && Address == other.Address &&
+                   PassportId == other.PassportId;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return obj.GetType() == this.GetType() && Equals((Client)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Name, Surname, Address, PassportId);
         }
     }
 }
