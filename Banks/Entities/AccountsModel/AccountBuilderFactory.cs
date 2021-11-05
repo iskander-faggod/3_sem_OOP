@@ -1,6 +1,6 @@
 using System;
 using Banks.Entities.AccountsModel.Builders;
-using Banks.Entities.AccountsModel.Builders.Interface;
+using Banks.Entities.AccountsModel.Builders.Interfaces;
 using Banks.Entities.AccountsModel.Creator;
 using Banks.Tools;
 

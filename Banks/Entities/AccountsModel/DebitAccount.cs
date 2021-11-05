@@ -19,6 +19,11 @@ namespace Banks.Entities.AccountsModel
             _percent = percent;
         }
 
+        public override void AccountPayoff()
+        {
+            _deposit += _deposit * _percent;
+        }
+
         public override void CashWithdrawalFromAccount(decimal value)
         {
             if (value > _deposit) throw new BanksException("Value can't be more then deposit");
@@ -30,9 +35,6 @@ namespace Banks.Entities.AccountsModel
             _deposit += value;
         }
 
-        public override void CashTransferToAnotherBankAccount(Bank bank, decimal value)
-        {
-            throw new NotImplementedException();
-        }
+        public Guid GetAccountId() => _accountId;
     }
 }

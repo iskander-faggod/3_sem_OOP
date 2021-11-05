@@ -1,5 +1,5 @@
 using System;
-using Banks.Entities.AccountsModel.Builders.Interface;
+using Banks.Entities.AccountsModel.Builders.Interfaces;
 using Banks.Entities.AccountsModel.Creator;
 using Banks.Tools;
 
@@ -46,6 +46,12 @@ namespace Banks.Entities.AccountsModel.Builders
         public IAccountBuilder SetCommission(decimal commission)
         {
             return ThrowInvalidOperation(nameof(SetCommission));
+        }
+
+        public IAccountBuilder SetUnlockDate(DateTime dateTime)
+        {
+            _depositUnlockDate = dateTime;
+            return this;
         }
 
         public IAccountBuilder SetLowPercent(decimal lowPercent)

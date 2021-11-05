@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Banks.Entities.AccountsModel.Creator;
 using Banks.Tools;
 
@@ -8,38 +9,34 @@ namespace Banks.Entities.AccountsModel
     {
         private decimal _deposit = 0;
         private decimal _limit;
-        private decimal _percent;
         private Guid _accountId;
         private decimal _commission;
 
-        public CreditAccount(decimal percent, decimal limit, decimal commission, Guid accountId)
+        public CreditAccount(decimal limit, decimal commission, Guid accountId)
         {
-            if (percent < 0) throw new BanksException("Invalid percent data");
-            _percent = percent;
+            if (accountId == Guid.Empty) throw new BanksException("AccountId is null");
             _commission = commission;
             _limit = limit;
             _accountId = accountId;
         }
 
-        public void AccountPayoff()
+        public override void AccountPayoff()
         {
-            _deposit = _deposit + (_deposit * _percent);
+            if (_deposit < _limit) throw new BanksException("Deposit can't be less then money limit");
+            if (_deposit < 0) _deposit -= _commission;
         }
 
         public override void CashWithdrawalFromAccount(decimal value)
         {
-            if (value > _deposit) throw new BanksException("Value more then deposit");
-            _deposit -= value;
+            _deposit += value;
         }
 
         public override void CashReplenishmentToAccount(decimal value)
         {
-            _limit -= value;
+            // TODO : Условие связанное с лимитом
+            _deposit -= value;
         }
 
-        public override void CashTransferToAnotherBankAccount(Bank bank, decimal value)
-        {
-            if (bank is null) throw new BanksException("Incorrect bank");
-        }
+        public Guid GetAccountId() => _accountId;
     }
 }

@@ -1,5 +1,5 @@
 using System;
-using Banks.Entities.AccountsModel.Builders.Interface;
+using Banks.Entities.AccountsModel.Builders.Interfaces;
 using Banks.Entities.AccountsModel.Creator;
 using Banks.Tools;
 
@@ -31,6 +31,11 @@ namespace Banks.Entities.AccountsModel.Builders
         public IAccountBuilder SetLimit(decimal limit)
         {
             return ThrowInvalidOperation(nameof(SetLimit));
+        }
+
+        public IAccountBuilder SetUnlockDate(DateTime dateTime)
+        {
+            return ThrowInvalidOperation(nameof(SetUnlockDate));
         }
 
         public IAccountBuilder SetPercent(decimal percent)

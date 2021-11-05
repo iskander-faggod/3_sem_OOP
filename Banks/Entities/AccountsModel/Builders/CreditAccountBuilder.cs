@@ -1,5 +1,6 @@
+#nullable enable
 using System;
-using Banks.Entities.AccountsModel.Builders.Interface;
+using Banks.Entities.AccountsModel.Builders.Interfaces;
 using Banks.Entities.AccountsModel.Creator;
 using Banks.Tools;
 
@@ -8,7 +9,6 @@ namespace Banks.Entities.AccountsModel.Builders
     public class CreditAccountBuilder : IAccountBuilder
     {
         private decimal? _limit = null;
-        private decimal? _percent = null;
         private Guid? _accountId = null;
         private decimal? _commission = null;
 
@@ -16,10 +16,8 @@ namespace Banks.Entities.AccountsModel.Builders
         {
             if (!_accountId.HasValue) throw new BanksException($"Required field {nameof(_accountId)} is missing");
             if (!_limit.HasValue) throw new BanksException($"Required field {nameof(_limit)} is missing");
-            if (!_percent.HasValue)
-                throw new BanksException($"Required field {nameof(_percent)} is missing");
             if (!_commission.HasValue) throw new BanksException($"Required field {nameof(_commission)} is missing");
-            return new CreditAccount(_percent.Value, _limit.Value, _commission.Value, _accountId.Value);
+            return new CreditAccount(_limit.Value, _commission.Value, _accountId.Value);
         }
 
         public IAccountBuilder SetAccountId(Guid id)
@@ -34,6 +32,11 @@ namespace Banks.Entities.AccountsModel.Builders
             if (limit < 0) throw new BanksException($"Field {nameof(limit)} is invalid");
             _limit = limit;
             return this;
+        }
+
+        public IAccountBuilder SetUnlockDate(DateTime dateTime)
+        {
+            return ThrowInvalidOperation(nameof(SetUnlockDate));
         }
 
         public IAccountBuilder SetPercent(decimal percent)

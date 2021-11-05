@@ -6,11 +6,13 @@ namespace Banks.Entities
     public class BankSettings
     {
         public BankSettings(
+            string name,
             decimal yearPercent,
             decimal belowFiftyThousandPercent,
             decimal betweenFiftyAndHundredThousandPercent,
             decimal aboveHundredThousandPercent,
             TimeSpan depositTimeDuration,
+            DateTime depositUnlockDate,
             decimal transferLimit,
             decimal commission)
         {
@@ -33,10 +35,13 @@ namespace Banks.Entities
             BetweenFiftyAndHundredThousandPercent = betweenFiftyAndHundredThousandPercent;
             AboveHundredThousandPercent = aboveHundredThousandPercent;
             DepositTimeDuration = depositTimeDuration;
+            DepositUnlockDate = depositUnlockDate;
             TransferLimit = transferLimit;
             Commission = commission;
+            Name = name;
         }
 
+        public string Name { get; }
         public decimal Commission { get; }
         public decimal YearPercent { get; }
         public decimal BelowFiftyThousandPercent { get; }
@@ -44,5 +49,6 @@ namespace Banks.Entities
         public decimal AboveHundredThousandPercent { get; }
         public TimeSpan DepositTimeDuration { get; }
         public decimal TransferLimit { get; }
+        public DateTime DepositUnlockDate { get; }
     }
 }

@@ -1,7 +1,7 @@
 using System;
 using Banks.Entities.AccountsModel.Creator;
 
-namespace Banks.Entities.AccountsModel.Builders.Interface
+namespace Banks.Entities.AccountsModel.Builders.Interfaces
 {
     public interface IAccountBuilder
     {
@@ -9,6 +9,7 @@ namespace Banks.Entities.AccountsModel.Builders.Interface
 
         public IAccountBuilder SetAccountId(Guid id);
         public IAccountBuilder SetLimit(decimal limit);
+        public IAccountBuilder SetUnlockDate(DateTime dateTime);
         public IAccountBuilder SetPercent(decimal percent);
         public IAccountBuilder SetCommission(decimal commission);
         public IAccountBuilder SetLowPercent(decimal lowPercent);

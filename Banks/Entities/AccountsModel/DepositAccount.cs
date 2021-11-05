@@ -15,7 +15,9 @@ namespace Banks.Entities.AccountsModel
 
         public DepositAccount(decimal lowPercent, decimal middlePercent, decimal highPercent, Guid accountId, DateTime depositUnlockDate)
         {
-            // проверить проценты
+            if (lowPercent > middlePercent) throw new BanksException("LowPercent can't be more then MiddlePercent");
+            if (middlePercent > highPercent) throw new BanksException("middlePercent can't be more then highPercent");
+            if (lowPercent > highPercent) throw new BanksException("LowPercent can't be more then highPercent");
             if (depositUnlockDate < DateTime.Now) throw new BanksException("Unlock date should be in future");
             _deposit = 0;
             _lowPercent = lowPercent;
@@ -25,26 +27,24 @@ namespace Banks.Entities.AccountsModel
             _depositUnlockDate = depositUnlockDate;
         }
 
-        public void AccountPayoff()
+        public override void AccountPayoff()
         {
             if (_deposit < 50000) _deposit = (_deposit * _lowPercent) + _deposit;
             if (_deposit is > 50000 and < 100000) _deposit = (_deposit * _middlePercent) + _deposit;
             if (_deposit < 50000) _deposit = (_deposit * _highPercent) + _deposit;
         }
 
-        public override void CashWithdrawalFromAccount()
+        public override void CashWithdrawalFromAccount(decimal value)
         {
-            throw new NotImplementedException();
+            _deposit += value;
         }
 
-        public override void CashReplenishmentToAccount()
+        public override void CashReplenishmentToAccount(decimal value)
         {
-            throw new NotImplementedException();
+            if (_deposit < value) throw new BanksException("You cant replenishment money from deposit");
+            _deposit -= value;
         }
 
-        public override void CashTransferToAnotherBankAccount()
-        {
-            throw new NotImplementedException();
-        }
+        public Guid GetAccountId() => _accountId;
     }
 }
