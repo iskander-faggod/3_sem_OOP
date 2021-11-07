@@ -23,20 +23,21 @@ namespace Banks.Entities.AccountsModel
         public override void AccountPayoff()
         {
             if (_deposit < _limit) throw new BanksException("Deposit can't be less then money limit");
-            if (_deposit < 0) _deposit -= _commission;
+            if (_deposit < 0) _deposit -= _deposit * _commission;
         }
 
         public override void CashWithdrawalFromAccount(decimal value)
         {
-            _deposit += value;
+            _deposit -= value;
         }
 
         public override void CashReplenishmentToAccount(decimal value)
         {
             // TODO : Условие связанное с лимитом
-            _deposit -= value;
+            _deposit += value;
         }
 
-        public Guid GetAccountId() => _accountId;
+        public override Guid GetAccountId() => _accountId;
+        public override decimal GetDeposit() => _deposit;
     }
 }

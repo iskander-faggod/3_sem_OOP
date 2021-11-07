@@ -1,7 +1,6 @@
-using Banks.Entities.AccountsModel;
 using Banks.Tools;
 
-namespace Banks.Entities
+namespace Banks.Entities.ClientModel.Builder
 {
     public class ClientBuilder
     {

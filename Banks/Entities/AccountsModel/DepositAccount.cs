@@ -45,6 +45,7 @@ namespace Banks.Entities.AccountsModel
             _deposit -= value;
         }
 
-        public Guid GetAccountId() => _accountId;
+        public override Guid GetAccountId() => _accountId;
+        public override decimal GetDeposit() => _deposit;
     }
 }

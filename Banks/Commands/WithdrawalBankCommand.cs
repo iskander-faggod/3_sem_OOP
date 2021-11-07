@@ -5,7 +5,7 @@ using Banks.Tools;
 
 namespace Banks.Commands
 {
-    public class WithdrawalBankCommand
+    public class WithdrawalBankCommand : IBankCommand
     {
         private readonly Guid _accountId;
         private readonly decimal _amount;
@@ -28,7 +28,7 @@ namespace Banks.Commands
 
         public void Execute(ClientContext context)
         {
-            if (!rollbackAvailable) throw new BanksException("You can't execute");
+            if (rollbackAvailable) throw new BanksException("You can't execute");
             if (!context.GetAccounts().ContainsKey(_accountId))
             {
                 throw new NonRevertableCommandExecption("Can't execute this command");

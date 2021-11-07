@@ -1,8 +1,7 @@
 using System;
-using Banks.Entities.AccountsModel.Creator;
 using Banks.Tools;
 
-namespace Banks.Entities
+namespace Banks.Entities.ClientModel
 {
     public class Client : IEquatable<Client>
     {

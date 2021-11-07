@@ -11,7 +11,6 @@ namespace Banks.Entities
             decimal belowFiftyThousandPercent,
             decimal betweenFiftyAndHundredThousandPercent,
             decimal aboveHundredThousandPercent,
-            TimeSpan depositTimeDuration,
             DateTime depositUnlockDate,
             decimal transferLimit,
             decimal commission)
@@ -26,15 +25,11 @@ namespace Banks.Entities
                 throw new BanksException("Below 50000 percent should be less then 50000-100000 percent");
             if (betweenFiftyAndHundredThousandPercent > aboveHundredThousandPercent)
                 throw new BanksException("Between 50000-100000 percent should be less then 100000+ percent");
-            if (depositTimeDuration <= TimeSpan.Zero)
-                throw new BanksException("Deposit duration time should be more then 0");
-            if (transferLimit < 0) throw new BanksException("Transfer limit should be more then 0");
             if (commission < 0) throw new BanksException("Commission should not be less then 0");
             YearPercent = yearPercent;
             BelowFiftyThousandPercent = belowFiftyThousandPercent;
             BetweenFiftyAndHundredThousandPercent = betweenFiftyAndHundredThousandPercent;
             AboveHundredThousandPercent = aboveHundredThousandPercent;
-            DepositTimeDuration = depositTimeDuration;
             DepositUnlockDate = depositUnlockDate;
             TransferLimit = transferLimit;
             Commission = commission;
@@ -47,7 +42,6 @@ namespace Banks.Entities
         public decimal BelowFiftyThousandPercent { get; }
         public decimal BetweenFiftyAndHundredThousandPercent { get; }
         public decimal AboveHundredThousandPercent { get; }
-        public TimeSpan DepositTimeDuration { get; }
         public decimal TransferLimit { get; }
         public DateTime DepositUnlockDate { get; }
     }

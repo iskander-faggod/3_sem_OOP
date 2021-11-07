@@ -7,7 +7,6 @@ namespace Banks.Entities.AccountsModel.Builders
 {
     public class DebitAccountBuilder : IAccountBuilder
     {
-        private decimal? _deposit = null;
         private decimal? _percent = null;
         private Guid? _accountId = null;
 
@@ -15,10 +14,7 @@ namespace Banks.Entities.AccountsModel.Builders
         {
             if (!_accountId.HasValue) throw new BanksException($"Required field {nameof(_accountId)} is missing");
             if (!_percent.HasValue) throw new BanksException($"Required field {nameof(_percent)} is missing");
-            if (!_deposit.HasValue)
-                throw new BanksException($"Required field {nameof(_deposit)} is missing");
-
-            return new DebitAccount(_deposit.Value, _percent.Value, _accountId.Value);
+            return new DebitAccount(_percent.Value, _accountId.Value);
         }
 
         public IAccountBuilder SetAccountId(Guid id)

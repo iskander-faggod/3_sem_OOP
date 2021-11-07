@@ -10,11 +10,10 @@ namespace Banks.Entities.AccountsModel
         private decimal _percent;
         private Guid _accountId;
 
-        public DebitAccount(decimal deposit, decimal percent, Guid accountId)
+        public DebitAccount(decimal percent, Guid accountId)
         {
-            if (deposit < 0) throw new BanksException("Invalid deposit data");
             if (percent < 0) throw new BanksException("Invalid percent data");
-            _deposit = deposit;
+            _deposit = 0;
             _accountId = accountId;
             _percent = percent;
         }
@@ -35,6 +34,7 @@ namespace Banks.Entities.AccountsModel
             _deposit += value;
         }
 
-        public Guid GetAccountId() => _accountId;
+        public override Guid GetAccountId() => _accountId;
+        public override decimal GetDeposit() => _deposit;
     }
 }

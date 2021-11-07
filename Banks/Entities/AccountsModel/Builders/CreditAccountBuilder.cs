@@ -29,7 +29,6 @@ namespace Banks.Entities.AccountsModel.Builders
 
         public IAccountBuilder SetLimit(decimal limit)
         {
-            if (limit < 0) throw new BanksException($"Field {nameof(limit)} is invalid");
             _limit = limit;
             return this;
         }

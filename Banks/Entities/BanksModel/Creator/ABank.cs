@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Banks.Entities.AccountsModel.Creator;
+using Banks.Entities.ClientModel;
 
 namespace Banks.Entities.Creator
 {

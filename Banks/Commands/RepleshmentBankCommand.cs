@@ -5,38 +5,43 @@ using Banks.Tools;
 
 namespace Banks.Commands
 {
-    public class TransferToAnotherAccountCommand : IBankCommand
+    public class RepleshmentBankCommand : IBankCommand
     {
         private readonly Guid _accountId;
         private readonly decimal _amount;
+
         private IAccount _currentAccount;
-        private IAccount _newAccount;
         private bool rollbackAvailable = false;
 
-        public TransferToAnotherAccountCommand(Guid accountId, decimal amount, IAccount currentAccount, IAccount newAccount)
+        public RepleshmentBankCommand(Guid accountId, decimal amount, IAccount currentAccount)
         {
             if (accountId == default) throw new BanksException("Invalid accountId");
             if (amount < 0) throw new BanksException("Amount can't be less then 0");
             _accountId = accountId;
             _amount = amount;
             _currentAccount = currentAccount;
-            _newAccount = newAccount;
         }
 
         public void Execute(ClientContext context)
         {
             if (rollbackAvailable) throw new BanksException("You can't execute");
-            if (!context.GetAccounts().ContainsKey(_accountId)) throw new TransferToAnotherAccountExcpetion("Can't execute this command");
-            _currentAccount.CashWithdrawalFromAccount(_amount);
-            _newAccount.CashReplenishmentToAccount(_amount);
+            if (!context.GetAccounts().ContainsKey(_accountId))
+            {
+                throw new NonRevertableCommandExecption("Can't execute this command");
+            }
+
+            _currentAccount.CashReplenishmentToAccount(_amount);
             rollbackAvailable = true;
         }
 
         public void Rollback()
         {
-            if (!rollbackAvailable) throw new BanksException("You can't execute");
-            _currentAccount.CashReplenishmentToAccount(_amount);
-            _newAccount.CashWithdrawalFromAccount(_amount);
+            if (!rollbackAvailable)
+            {
+                throw new BanksException("You can't rollback");
+            }
+
+            _currentAccount.CashWithdrawalFromAccount(_amount);
             rollbackAvailable = false;
         }
     }

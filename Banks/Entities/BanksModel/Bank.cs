@@ -6,6 +6,7 @@ using Backups.Tools;
 using Banks.Commands;
 using Banks.Entities.AccountsModel;
 using Banks.Entities.AccountsModel.Creator;
+using Banks.Entities.ClientModel;
 using Banks.Entities.Creator;
 using Banks.Tools;
 
@@ -13,7 +14,6 @@ namespace Banks.Entities
 {
     public class Bank
     {
-        private readonly List<Client> _clients;
         private readonly Dictionary<Client, List<Guid>> _clientAccountsById;
         private readonly Dictionary<Guid, IAccount> _accounts;
         private readonly BankSettings _settings;
@@ -21,49 +21,66 @@ namespace Banks.Entities
         public Bank(BankSettings settings)
         {
             _settings = settings ?? throw new BanksException("Invalid settings");
-            _clients = new List<Client>();
             _clientAccountsById = new Dictionary<Client, List<Guid>>();
             _accounts = new Dictionary<Guid, IAccount>();
         }
 
-        public void CreateCreditAccount(Client client)
+        public IAccount CreateCreditAccount(Client client)
         {
             var accountId = Guid.NewGuid();
-            _accounts.Add(accountId, AccountBuilderFactory.Create(AccountType.Credit)
+            IAccount account = AccountBuilderFactory.Create(AccountType.Credit)
                 .SetAccountId(accountId)
                 .SetCommission(_settings.Commission)
                 .SetLimit(_settings.TransferLimit)
-                .Build());
-            _clientAccountsById[client].Add(accountId);
-        }
-
-        public void CreateDepositAccount(Client client)
-        {
-            var accountId = Guid.NewGuid();
-            _accounts.Add(accountId, AccountBuilderFactory.Create(AccountType.Deposit)
-                .SetAccountId(accountId)
-                .SetLowPercent(_settings.BelowFiftyThousandPercent)
-                .SetMiddlePercent(_settings.BetweenFiftyAndHundredThousandPercent)
-                .SetHighPercent(_settings.AboveHundredThousandPercent)
-                .SetUnlockDate(_settings.DepositUnlockDate)
-                .Build());
-            if (!_clientAccountsById.TryGetValue(client, out var clientAccounts))
+                .Build();
+            _accounts.Add(accountId, account);
+            if (!_clientAccountsById.TryGetValue(client, out List<Guid> clientAccounts))
             {
                 clientAccounts = new List<Guid> { accountId };
                 _clientAccountsById.Add(client, clientAccounts);
             }
 
             clientAccounts.Add(accountId);
+            return account;
         }
 
-        public void CreateDebitAccount(Client client)
+        public IAccount CreateDepositAccount(Client client)
         {
             var accountId = Guid.NewGuid();
-            _accounts.Add(accountId, AccountBuilderFactory.Create(AccountType.Debit)
+            IAccount account = AccountBuilderFactory.Create(AccountType.Deposit)
+                .SetAccountId(accountId)
+                .SetLowPercent(_settings.BelowFiftyThousandPercent)
+                .SetMiddlePercent(_settings.BetweenFiftyAndHundredThousandPercent)
+                .SetHighPercent(_settings.AboveHundredThousandPercent)
+                .SetUnlockDate(_settings.DepositUnlockDate)
+                .Build();
+            _accounts.Add(accountId, account);
+            if (!_clientAccountsById.TryGetValue(client, out List<Guid> clientAccounts))
+            {
+                clientAccounts = new List<Guid> { accountId };
+                _clientAccountsById.Add(client, clientAccounts);
+            }
+
+            clientAccounts.Add(accountId);
+            return account;
+        }
+
+        public IAccount CreateDebitAccount(Client client)
+        {
+            var accountId = Guid.NewGuid();
+            IAccount account = AccountBuilderFactory.Create(AccountType.Debit)
                 .SetAccountId(accountId)
                 .SetPercent(_settings.YearPercent)
-                .Build());
-            _clientAccountsById[client].Add(accountId);
+                .Build();
+            _accounts.Add(accountId, account);
+            if (!_clientAccountsById.TryGetValue(client, out List<Guid> clientAccounts))
+            {
+                clientAccounts = new List<Guid> { accountId };
+                _clientAccountsById.Add(client, clientAccounts);
+            }
+
+            clientAccounts.Add(accountId);
+            return account;
         }
 
         public void HandleCommand(IBankCommand command, Client executor)
@@ -92,22 +109,6 @@ namespace Banks.Entities
                 command.Rollback();
                 throw new BanksException(e);
             }
-        }
-
-        public void AddClient(Client client)
-        {
-            if (_clients.Contains(client)) throw new BanksException("Client is already added in this bank");
-            _clients.Add(client);
-        }
-
-        public Guid TransferMoneyToAnotherAccount(IAccount oldAccount, IAccount newAccount, decimal value)
-        {
-            if (oldAccount is null) throw new BackupsException("OldAccount is null");
-            if (newAccount is null) throw new BackupsException("OldAccount is null");
-            newAccount.CashReplenishmentToAccount(value);
-            oldAccount.CashWithdrawalFromAccount(value);
-            var transferId = Guid.NewGuid();
-            return transferId;
         }
 
         public Dictionary<Client, List<Guid>> GetClientAccountsById() => _clientAccountsById;
