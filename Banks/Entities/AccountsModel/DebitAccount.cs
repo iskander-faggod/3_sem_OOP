@@ -9,6 +9,7 @@ namespace Banks.Entities.AccountsModel
         private decimal _deposit;
         private decimal _percent;
         private Guid _accountId;
+        private decimal _monthCommission = 0;
 
         public DebitAccount(decimal percent, Guid accountId)
         {
@@ -20,7 +21,13 @@ namespace Banks.Entities.AccountsModel
 
         public override void AccountPayoff()
         {
-            _deposit += _deposit * _percent;
+            _monthCommission = (_deposit * _percent) / 365;
+        }
+
+        public override void AccrualOfCommission()
+        {
+            CashReplenishmentToAccount(_monthCommission);
+            _monthCommission = 0;
         }
 
         public override void CashWithdrawalFromAccount(decimal value)

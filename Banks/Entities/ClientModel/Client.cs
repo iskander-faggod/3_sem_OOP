@@ -1,9 +1,10 @@
 using System;
+using Banks.Observing;
 using Banks.Tools;
 
 namespace Banks.Entities.ClientModel
 {
-    public class Client : IEquatable<Client>
+    public class Client : IEquatable<Client>, IObserver
     {
         public Client(string name, string surname, string address = null, string passportId = null)
         {
@@ -21,7 +22,7 @@ namespace Banks.Entities.ClientModel
         public string Address { get; private set; }
         public string PassportId { get; private set; }
         public bool IsSuspicious => string.IsNullOrWhiteSpace(Address) || string.IsNullOrWhiteSpace(PassportId);
-
+        public bool Notified { get; private set; }
         public void SetPassport(string passportId)
         {
             if (string.IsNullOrWhiteSpace(passportId)) throw new BanksException("Invalid passport id");
@@ -52,6 +53,11 @@ namespace Banks.Entities.ClientModel
         public override int GetHashCode()
         {
             return HashCode.Combine(Name, Surname, Address, PassportId);
+        }
+
+        public void Modify(IObservable subject)
+        {
+            Notified = true;
         }
     }
 }

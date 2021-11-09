@@ -7,22 +7,24 @@ using Banks.Commands;
 using Banks.Entities.AccountsModel;
 using Banks.Entities.AccountsModel.Creator;
 using Banks.Entities.ClientModel;
-using Banks.Entities.Creator;
+using Banks.Observing;
 using Banks.Tools;
 
 namespace Banks.Entities
 {
-    public class Bank
+    public class Bank : IObservable
     {
         private readonly Dictionary<Client, List<Guid>> _clientAccountsById;
         private readonly Dictionary<Guid, IAccount> _accounts;
         private readonly BankSettings _settings;
+        private readonly List<IObserver> _observers;
 
         public Bank(BankSettings settings)
         {
             _settings = settings ?? throw new BanksException("Invalid settings");
             _clientAccountsById = new Dictionary<Client, List<Guid>>();
             _accounts = new Dictionary<Guid, IAccount>();
+            _observers = new List<IObserver>();
         }
 
         public IAccount CreateCreditAccount(Client client)
@@ -114,5 +116,28 @@ namespace Banks.Entities
         public Dictionary<Client, List<Guid>> GetClientAccountsById() => _clientAccountsById;
         public Dictionary<Guid, IAccount> GetAccounts() => _accounts;
         public string GetBankName() => _settings.Name;
+
+        public IAccount GetAccountById(Guid id)
+        {
+            return (from account in _accounts where account.Key == id select account.Value).FirstOrDefault();
+        }
+
+        public List<IAccount> GetAllAccounts()
+        {
+            return _accounts.Values.ToList();
+        }
+
+        public void Notify()
+        {
+            foreach (IObserver observer in _observers)
+            {
+                observer.Modify(this);
+            }
+        }
+
+        public void AddObserver(IObserver observer)
+        {
+            _observers.Add(observer);
+        }
     }
 }

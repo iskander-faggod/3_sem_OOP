@@ -36,13 +36,13 @@ namespace Banks.Entities
             Name = name;
         }
 
-        public string Name { get; }
-        public decimal Commission { get; }
-        public decimal YearPercent { get; }
-        public decimal BelowFiftyThousandPercent { get; }
-        public decimal BetweenFiftyAndHundredThousandPercent { get; }
-        public decimal AboveHundredThousandPercent { get; }
-        public decimal TransferLimit { get; }
-        public DateTime DepositUnlockDate { get; }
+        public string Name { get; set; }
+        public decimal Commission { get; set; }
+        public decimal YearPercent { get; set; }
+        public decimal BelowFiftyThousandPercent { get; set; }
+        public decimal BetweenFiftyAndHundredThousandPercent { get; set; }
+        public decimal AboveHundredThousandPercent { get; set; }
+        public decimal TransferLimit { get; set; }
+        public DateTime DepositUnlockDate { get; set; }
     }
 }

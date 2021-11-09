@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Immutable;
 using Banks.Entities.AccountsModel.Creator;
-using Banks.Entities.ClientModel;
 
-namespace Banks.Entities
+namespace Banks.Entities.ClientModel
 {
     public class ClientContext
     {

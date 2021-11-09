@@ -12,8 +12,14 @@ namespace Banks.Entities.AccountsModel
         private decimal _middlePercent;
         private decimal _highPercent;
         private DateTime _depositUnlockDate;
+        private decimal _monthCommission = 0;
 
-        public DepositAccount(decimal lowPercent, decimal middlePercent, decimal highPercent, Guid accountId, DateTime depositUnlockDate)
+        public DepositAccount(
+            decimal lowPercent,
+            decimal middlePercent,
+            decimal highPercent,
+            Guid accountId,
+            DateTime depositUnlockDate)
         {
             if (lowPercent > middlePercent) throw new BanksException("LowPercent can't be more then MiddlePercent");
             if (middlePercent > highPercent) throw new BanksException("middlePercent can't be more then highPercent");
@@ -29,9 +35,19 @@ namespace Banks.Entities.AccountsModel
 
         public override void AccountPayoff()
         {
-            if (_deposit < 50000) _deposit = (_deposit * _lowPercent) + _deposit;
-            if (_deposit is > 50000 and < 100000) _deposit = (_deposit * _middlePercent) + _deposit;
-            if (_deposit < 50000) _deposit = (_deposit * _highPercent) + _deposit;
+            _monthCommission = _deposit switch
+            {
+                < 50000 => (_deposit * _lowPercent) / 365,
+                > 50000 and < 100000 => (_deposit * _middlePercent) / 365,
+                _ => _monthCommission
+            };
+            if (_deposit > 50000) _monthCommission = (_deposit * _highPercent) / 365;
+        }
+
+        public override void AccrualOfCommission()
+        {
+            CashReplenishmentToAccount(_monthCommission);
+            _monthCommission = 0;
         }
 
         public override void CashWithdrawalFromAccount(decimal value)

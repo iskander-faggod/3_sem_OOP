@@ -1,21 +1,26 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Banks.Entities.AccountsModel.Creator;
+using Banks.Entities.ClientModel;
 using Banks.Tools;
 
 namespace Banks.Entities
 {
-    public class MainBank
+    public class MainBank : IEquatable<MainBank>
     {
         private readonly List<Bank> _banks;
+        private readonly List<Client> _clients;
 
-        public MainBank(List<Bank> banks)
+        /*public MainBank(List<Bank> banks, List<Client> clients)
         {
             _banks = banks ?? throw new BanksException("Invalid banks");
-        }
+            _clients = clients ?? throw new BanksException("Invalid clients");
+        }*/
 
         public MainBank()
         {
+            _clients = new List<Client>();
             _banks = new List<Bank>();
         }
 
@@ -31,8 +36,21 @@ namespace Banks.Entities
                                  .GetAccounts().Values))
                 {
                     account?.AccountPayoff();
+                    account?.AccrualOfCommission();
                 }
             }
+        }
+
+        public Bank GetBankByName(string name)
+        {
+            if (string.IsNullOrEmpty(name)) throw new BanksException("Invalid bank name");
+            return _banks.FirstOrDefault(bank => bank.GetBankName() == name);
+        }
+
+        public Client GetClientById(string id)
+        {
+            if (string.IsNullOrEmpty(id)) throw new BanksException("Invalid client id");
+            return _clients.FirstOrDefault(client => client.PassportId == id);
         }
 
         public Bank AddNewBank(Bank newBank)
@@ -42,8 +60,23 @@ namespace Banks.Entities
             return newBank;
         }
 
-        public void Notification()
+        public bool Equals(MainBank other)
         {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Equals(_banks, other._banks) && Equals(_clients, other._clients);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return obj.GetType() == this.GetType() && Equals((MainBank)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(_banks, _clients);
         }
     }
 }

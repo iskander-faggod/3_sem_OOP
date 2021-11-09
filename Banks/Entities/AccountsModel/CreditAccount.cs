@@ -11,6 +11,7 @@ namespace Banks.Entities.AccountsModel
         private decimal _limit;
         private Guid _accountId;
         private decimal _commission;
+        private decimal _monthComission = 0;
 
         public CreditAccount(decimal limit, decimal commission, Guid accountId)
         {
@@ -23,7 +24,13 @@ namespace Banks.Entities.AccountsModel
         public override void AccountPayoff()
         {
             if (_deposit < _limit) throw new BanksException("Deposit can't be less then money limit");
-            if (_deposit < 0) _deposit -= _deposit * _commission;
+            if (_deposit < 0) _monthComission -= _deposit - _commission;
+        }
+
+        public override void AccrualOfCommission()
+        {
+            CashReplenishmentToAccount(_monthComission);
+            _monthComission = 0;
         }
 
         public override void CashWithdrawalFromAccount(decimal value)

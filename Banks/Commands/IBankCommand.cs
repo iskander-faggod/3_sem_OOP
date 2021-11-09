@@ -1,4 +1,5 @@
 using Banks.Entities;
+using Banks.Entities.ClientModel;
 
 namespace Banks.Commands
 {

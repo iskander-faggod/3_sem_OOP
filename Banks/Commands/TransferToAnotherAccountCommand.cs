@@ -1,6 +1,7 @@
 using System;
 using Banks.Entities;
 using Banks.Entities.AccountsModel.Creator;
+using Banks.Entities.ClientModel;
 using Banks.Tools;
 
 namespace Banks.Commands
