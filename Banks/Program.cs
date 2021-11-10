@@ -15,6 +15,7 @@ namespace Banks
     {
         private static void Main(string[] args)
         {
+            var mainBank = new MainBank();
             var rule = new Rule("[red]Всем привет! Давайте начнем использовать и создавать банки[/]");
             AnsiConsole.Write(rule);
             var app = new CommandApp();
@@ -35,8 +36,3 @@ namespace Banks
         }
     }
 }
-
-// TODO : Команды не должны быть связаны, каждая команда делает свое действие
-// TODO : Команда создания, команда транзакции, команда таблички
-// TODO : ПРОВЕРИТЬ СИГНАТУРЫ АККАУНТОВ
-// TODO : UI для команд оберрунть

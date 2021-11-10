@@ -17,7 +17,7 @@ namespace Banks.ConsoleInterface
                     .PageSize(10)
                     .AddChoices(new[]
                     {
-                     "Debit", "Credit", "Deposit",
+                        "Debit", "Credit", "Deposit",
                     }));
             Client client = settings.MainBank.GetClientById(userId);
             Bank bank = settings.MainBank.GetBankByName(bankName);
@@ -45,7 +45,7 @@ namespace Banks.ConsoleInterface
         {
             [CommandOption("-a|--account")]
             [CommandArgument(0, "[MAIBANK]")]
-            public MainBank MainBank { get; set; }
+            public MainBank MainBank { get; } = CreateMainBank.MainBank;
         }
     }
 }

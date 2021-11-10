@@ -32,12 +32,14 @@ namespace Banks.Entities.AccountsModel
 
         public override void CashWithdrawalFromAccount(decimal value)
         {
+            if (value < 0) throw new BanksException("Value can't be less then 0");
             if (value > _deposit) throw new BanksException("Value can't be more then deposit");
             _deposit -= value;
         }
 
         public override void CashReplenishmentToAccount(decimal value)
         {
+            if (value < 0) throw new BanksException("Value can't be less then 0");
             _deposit += value;
         }
 
