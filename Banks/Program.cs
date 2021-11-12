@@ -15,14 +15,14 @@ namespace Banks
     {
         private static void Main(string[] args)
         {
-            var mainBank = new MainBank();
             var rule = new Rule("[red]Всем привет! Давайте начнем использовать и создавать банки[/]");
             AnsiConsole.Write(rule);
             var app = new CommandApp();
             app.Configure(config =>
             {
-                config.AddCommand<CreateClient>("createClient");
+                config.AddCommand<CreateMainBank>("createMainBank");
                 config.AddCommand<CreateBank>("createBank");
+                config.AddCommand<CreateClient>("createClient");
                 config.AddCommand<CreateAccount>("createAccount");
                 config.AddCommand<CreateOperations>("createOperations");
             });
@@ -31,7 +31,7 @@ namespace Banks
             {
                 string command = Console.ReadLine();
                 AnsiConsole.WriteLine();
-                app.Run(command.Split(" "));
+                app.Run(command.Split(' '));
             }
         }
     }

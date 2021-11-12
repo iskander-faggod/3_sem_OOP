@@ -1,5 +1,6 @@
 using System;
 using Banks.Entities;
+using Banks.Tools;
 using Spectre.Console;
 using Spectre.Console.Cli;
 
@@ -30,7 +31,9 @@ namespace Banks.ConsoleInterface
                 bankTransferLimit,
                 bankCommission);
 
+            if (bankSettings is null) throw new BanksException("Invalid banks settings");
             var newBank = new Bank(bankSettings);
+            settings.MainBank.AddNewBank(newBank);
             return 0;
         }
 
@@ -38,6 +41,7 @@ namespace Banks.ConsoleInterface
         {
             [CommandOption("-b|--bank")]
             public string BankName { get; set; }
+            public MainBank MainBank { get; } = CreateMainBank.MainBank;
         }
     }
 }

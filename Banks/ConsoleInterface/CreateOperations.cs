@@ -26,9 +26,8 @@ namespace Banks.ConsoleInterface
                     {
                         "Repleshment", "Transfer", "Withdrawal",
                     }));
-
-            Client client = settings.MainBank.GetClientById(userId);
             Bank bank = settings.MainBank.GetBankByName(bankName);
+            Client client = bank.GetClientById(userId);
             List<IAccount> accounts = bank.GetAllAccounts();
             IAccount account = accounts.FirstOrDefault(account => account.GetAccountId() == accountId);
 
@@ -37,16 +36,20 @@ namespace Banks.ConsoleInterface
                 case "Repleshment":
                     bank.HandleCommand(
                         new RepleshmentBankCommand(account.GetAccountId(), cash, account), client);
+                    AnsiConsole.WriteLine($"Текущий счет {account.GetDeposit()}");
                     break;
                 case "Withdrawal":
                     bank.HandleCommand(
                         new WithdrawalBankCommand(account.GetAccountId(), cash, account), client);
+                    AnsiConsole.WriteLine($"Текущий счет {account.GetDeposit()}");
+
                     break;
                 case "Transfer":
                     Guid id = AnsiConsole.Ask<Guid>("Enter account id");
                     IAccount newAccount = bank.GetAccountById(id);
                     bank.HandleCommand(
                         new TransferToAnotherAccountCommand(account.GetAccountId(), cash, account, newAccount), client);
+                    AnsiConsole.WriteLine($"Текущий счет {account.GetDeposit()}");
                     break;
                 default:
                     AnsiConsole.WriteLine("Invalid operations");

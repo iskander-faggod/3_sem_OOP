@@ -12,12 +12,6 @@ namespace Banks.Entities
         private readonly List<Bank> _banks;
         private readonly List<Client> _clients;
 
-        /*public MainBank(List<Bank> banks, List<Client> clients)
-        {
-            _banks = banks ?? throw new BanksException("Invalid banks");
-            _clients = clients ?? throw new BanksException("Invalid clients");
-        }*/
-
         public MainBank()
         {
             _clients = new List<Client>();
@@ -58,6 +52,13 @@ namespace Banks.Entities
             if (_banks.Contains(newBank)) throw new BanksException("Bank is already exist");
             _banks.Add(newBank);
             return newBank;
+        }
+
+        public Client AddNewClient(Client client)
+        {
+            if (_clients.Contains(client)) throw new BanksException("Client is already exist");
+            _clients.Add(client);
+            return client;
         }
 
         public bool Equals(MainBank other)

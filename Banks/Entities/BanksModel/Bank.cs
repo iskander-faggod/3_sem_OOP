@@ -36,14 +36,21 @@ namespace Banks.Entities
                 .SetLimit(_settings.TransferLimit)
                 .Build();
             _accounts.Add(accountId, account);
-            if (!_clientAccountsById.TryGetValue(client, out List<Guid> clientAccounts))
+            if (_clientAccountsById.ContainsKey(client))
             {
-                clientAccounts = new List<Guid> { accountId };
-                _clientAccountsById.Add(client, clientAccounts);
+                _clientAccountsById[client].Add(account.GetAccountId());
+            }
+            else
+            {
+                _clientAccountsById.Add(client, new List<Guid> { account.GetAccountId() });
             }
 
-            clientAccounts.Add(accountId);
             return account;
+        }
+
+        public Client GetClientById(string id)
+        {
+            return _clientAccountsById.Keys.FirstOrDefault(client => client.PassportId == id);
         }
 
         public IAccount CreateDepositAccount(Client client)
@@ -57,13 +64,15 @@ namespace Banks.Entities
                 .SetUnlockDate(_settings.DepositUnlockDate)
                 .Build();
             _accounts.Add(accountId, account);
-            if (!_clientAccountsById.TryGetValue(client, out List<Guid> clientAccounts))
+            if (_clientAccountsById.ContainsKey(client))
             {
-                clientAccounts = new List<Guid> { accountId };
-                _clientAccountsById.Add(client, clientAccounts);
+                _clientAccountsById[client].Add(account.GetAccountId());
+            }
+            else
+            {
+                _clientAccountsById.Add(client, new List<Guid> { account.GetAccountId() });
             }
 
-            clientAccounts.Add(accountId);
             return account;
         }
 
@@ -75,14 +84,32 @@ namespace Banks.Entities
                 .SetPercent(_settings.YearPercent)
                 .Build();
             _accounts.Add(accountId, account);
-            if (!_clientAccountsById.TryGetValue(client, out List<Guid> clientAccounts))
+            if (_clientAccountsById.ContainsKey(client))
             {
-                clientAccounts = new List<Guid> { accountId };
-                _clientAccountsById.Add(client, clientAccounts);
+                _clientAccountsById[client].Add(account.GetAccountId());
+            }
+            else
+            {
+                _clientAccountsById.Add(client, new List<Guid> { account.GetAccountId() });
             }
 
-            clientAccounts.Add(accountId);
             return account;
+        }
+
+        public void AddClient(Client client)
+        {
+            if (_clientAccountsById.Keys.Contains(client)) throw new BanksException("Client is already exist");
+            _clientAccountsById.Add(client, new List<Guid>());
+        }
+
+        public void AddAccountToClient(Client client, IAccount clientAccount)
+        {
+            foreach (KeyValuePair<Client, List<Guid>> account in _clientAccountsById.Where(account => account.Key.Equals(client)))
+            {
+                account.Value.Add(clientAccount.GetAccountId());
+            }
+
+            _accounts.TryAdd(clientAccount.GetAccountId(), clientAccount);
         }
 
         public void HandleCommand(IBankCommand command, Client executor)

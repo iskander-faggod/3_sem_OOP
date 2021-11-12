@@ -1,16 +1,21 @@
+using System;
 using Banks.Entities;
+using Spectre.Console;
 using Spectre.Console.Cli;
 
 namespace Banks.ConsoleInterface
 {
-    public class CreateMainBank : Command<CommandSettings>
+    public class CreateMainBank : Command<CreateMainBank.Settings>
     {
-        public static MainBank MainBank { get; set; }
-
-        public override int Execute(CommandContext context, CommandSettings settings)
+        public static MainBank MainBank { get; set; } = new MainBank();
+        public override int Execute(CommandContext context, Settings settings)
         {
-            MainBank = new MainBank();
+            AnsiConsole.Write("MainBank успешно создан");
             return 0;
+        }
+
+        public class Settings : CommandSettings
+        {
         }
     }
 }

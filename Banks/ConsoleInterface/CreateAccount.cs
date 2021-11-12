@@ -1,5 +1,7 @@
 using Banks.Entities;
+using Banks.Entities.AccountsModel.Creator;
 using Banks.Entities.ClientModel;
+using Banks.Tools;
 using Spectre.Console;
 using Spectre.Console.Cli;
 
@@ -19,19 +21,29 @@ namespace Banks.ConsoleInterface
                     {
                         "Debit", "Credit", "Deposit",
                     }));
-            Client client = settings.MainBank.GetClientById(userId);
+
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(bankName) || string.IsNullOrEmpty(account))
+                throw new BanksException("Invalid account data");
             Bank bank = settings.MainBank.GetBankByName(bankName);
+            Client client = bank.GetClientById(userId);
 
             switch (account)
             {
                 case "Debit":
-                    bank.CreateDebitAccount(client);
+                    IAccount newAccount1 = bank.CreateDebitAccount(client);
+                    bank.AddAccountToClient(client, newAccount1);
+                    AnsiConsole.WriteLine("Ваш номер аккаунта " + $"{newAccount1.GetAccountId()}");
                     break;
                 case "Credit":
-                    bank.CreateCreditAccount(client);
+                    IAccount newAccount2 = bank.CreateCreditAccount(client);
+                    bank.AddAccountToClient(client, newAccount2);
+                    AnsiConsole.WriteLine("Ваш номер аккаунта " + $"{newAccount2.GetAccountId()}");
                     break;
                 case "Deposit":
-                    bank.CreateDepositAccount(client);
+                    IAccount newAccount3 = bank.CreateDepositAccount(client);
+                    bank.AddAccountToClient(client, newAccount3);
+                    AnsiConsole.WriteLine("Ваш номер аккаунта " + $"{newAccount3.GetAccountId()}");
+
                     break;
                 default:
                     AnsiConsole.WriteLine("Account can't be created");
@@ -44,7 +56,6 @@ namespace Banks.ConsoleInterface
         public class Settings : CommandSettings
         {
             [CommandOption("-a|--account")]
-            [CommandArgument(0, "[MAIBANK]")]
             public MainBank MainBank { get; } = CreateMainBank.MainBank;
         }
     }

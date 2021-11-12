@@ -9,7 +9,7 @@ namespace Banks
 {
     public class PTest
     {
-        private static void PMain()
+        private static void TMain()
         {
             var iskander = new Client("Iskander", "Kudashev", "Svoboda 10", "6717637675");
             var misha = new Client("Misha", "Lipa", "Gde-to v Kupchino", "13371448");
@@ -68,6 +68,9 @@ namespace Banks
 
             var rule = new Rule("[red]Всем привет! Давайте начнем использовать и создавать банки[/]");
             AnsiConsole.Write(rule);
+
+            var bank2 = bank.GetAccountById(iskanderCredit.GetAccountId());
+            var client2 = bank.GetClientById("13371448");
         }
     }
 }
