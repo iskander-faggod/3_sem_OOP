@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using Banks.Entities.AccountsModel.Creator;
 using Banks.Tools;
 
@@ -21,7 +22,8 @@ namespace Banks.Entities.AccountsModel
 
         public void AccountPayoff()
         {
-            _monthCommission = (_deposit * _percent) / DateTime.Now.Year;
+            int daysInYear = new GregorianCalendar().GetDaysInYear(DateTime.Now.Year);
+            _monthCommission = (_deposit * _percent) / daysInYear;
         }
 
         public void AccrualOfCommission()

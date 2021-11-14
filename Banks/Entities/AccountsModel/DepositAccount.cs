@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using Banks.Entities.AccountsModel.Creator;
 using Banks.Tools;
 
@@ -16,7 +17,6 @@ namespace Banks.Entities.AccountsModel
         private decimal _highPercent;
         private DateTime _depositUnlockDate;
         private decimal _monthCommission = 0;
-
         public DepositAccount(
             decimal lowPercent,
             decimal middlePercent,
@@ -38,11 +38,12 @@ namespace Banks.Entities.AccountsModel
 
         public void AccountPayoff()
         {
+            int daysInYear = new GregorianCalendar().GetDaysInYear(DateTime.Now.Year);
             _monthCommission = _deposit switch
             {
-                < AmountForLowPercent => (_deposit * _lowPercent) / DateTime.Now.Year,
-                > AmountForLowPercent and < AmountForMiddleAndHighPercent => (_deposit * _middlePercent) / DateTime.Now.Year,
-                <= AmountForLowPercent => (_deposit * _highPercent) / DateTime.Now.Year,
+                < AmountForLowPercent => (_deposit * _lowPercent) / daysInYear,
+                > AmountForLowPercent and < AmountForMiddleAndHighPercent => (_deposit * _middlePercent) / daysInYear,
+                <= AmountForLowPercent => (_deposit * _highPercent) / daysInYear,
                 _ => _monthCommission
             };
         }
