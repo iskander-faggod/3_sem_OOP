@@ -6,7 +6,7 @@ namespace Banks.Entities.ClientModel
 {
     public class Client : IEquatable<Client>, IObserver
     {
-        public Client(string name, string surname, string address = null, string passportId = null)
+        public Client(string name, string surname, string address = null, int passportId = default)
         {
             if (string.IsNullOrEmpty(name)) throw new BanksException($"Invalid name - {name}");
             if (string.IsNullOrEmpty(surname)) throw new BanksException($"Invalid surname - {surname}");
@@ -20,12 +20,12 @@ namespace Banks.Entities.ClientModel
         public string Name { get; }
         public string Surname { get; }
         public string Address { get; private set; }
-        public string PassportId { get; private set; }
-        public bool IsSuspicious => string.IsNullOrWhiteSpace(Address) || string.IsNullOrWhiteSpace(PassportId);
+        public int PassportId { get; private set; }
+        public bool IsSuspicious => string.IsNullOrWhiteSpace(Address) || PassportId == default;
         public bool Notified { get; private set; }
-        public void SetPassport(string passportId)
+        public void SetPassport(int passportId)
         {
-            if (string.IsNullOrWhiteSpace(passportId)) throw new BanksException("Invalid passport id");
+            if (passportId == default) throw new BanksException("Invalid passport id");
             PassportId = passportId;
         }
 

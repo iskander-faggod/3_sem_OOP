@@ -2,13 +2,13 @@ using System;
 
 namespace Banks.Entities.AccountsModel.Creator
 {
-    public abstract class IAccount
+    public interface IAccount
     {
-        public abstract void CashWithdrawalFromAccount(decimal value);
-        public abstract void AccountPayoff();
-        public abstract void AccrualOfCommission();
-        public abstract void CashReplenishmentToAccount(decimal value);
-        public abstract Guid GetAccountId();
-        public abstract decimal GetDeposit();
+        void CashWithdrawalFromAccount(decimal value);
+        void AccountPayoff();
+        void AccrualOfCommission();
+        void CashReplenishmentToAccount(decimal value);
+        Guid GetAccountId();
+        decimal GetDeposit();
     }
 }

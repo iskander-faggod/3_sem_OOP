@@ -21,31 +21,31 @@ namespace Banks.Entities.AccountsModel
             _accountId = accountId;
         }
 
-        public override void AccountPayoff()
+        public void AccountPayoff()
         {
             if (_deposit < _limit) throw new BanksException("Deposit can't be less then money limit");
             if (_deposit < 0) _monthComission -= _deposit - _commission;
         }
 
-        public override void AccrualOfCommission()
+        public void AccrualOfCommission()
         {
             CashReplenishmentToAccount(_monthComission);
             _monthComission = 0;
         }
 
-        public override void CashWithdrawalFromAccount(decimal value)
+        public void CashWithdrawalFromAccount(decimal value)
         {
             if (value < 0) throw new BanksException("Value can't be less then 0");
             _deposit -= value;
         }
 
-        public override void CashReplenishmentToAccount(decimal value)
+        public void CashReplenishmentToAccount(decimal value)
         {
             if (value < 0) throw new BanksException("Value can't be less then 0");
             _deposit += value;
         }
 
-        public override Guid GetAccountId() => _accountId;
-        public override decimal GetDeposit() => _deposit;
+        public Guid GetAccountId() => _accountId;
+        public decimal GetDeposit() => _deposit;
     }
 }

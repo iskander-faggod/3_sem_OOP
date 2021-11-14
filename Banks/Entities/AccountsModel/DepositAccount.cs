@@ -6,6 +6,9 @@ namespace Banks.Entities.AccountsModel
 {
     public class DepositAccount : IAccount
     {
+        private const decimal AmountForLowPercent = 50000;
+        private const decimal AmountForMiddleAndHighPercent = 100000;
+
         private decimal _deposit;
         private Guid _accountId;
         private decimal _lowPercent;
@@ -33,37 +36,37 @@ namespace Banks.Entities.AccountsModel
             _depositUnlockDate = depositUnlockDate;
         }
 
-        public override void AccountPayoff()
+        public void AccountPayoff()
         {
             _monthCommission = _deposit switch
             {
-                < 50000 => (_deposit * _lowPercent) / 365,
-                > 50000 and < 100000 => (_deposit * _middlePercent) / 365,
+                < AmountForLowPercent => (_deposit * _lowPercent) / DateTime.Now.Year,
+                > AmountForLowPercent and < AmountForMiddleAndHighPercent => (_deposit * _middlePercent) / DateTime.Now.Year,
+                <= AmountForLowPercent => (_deposit * _highPercent) / DateTime.Now.Year,
                 _ => _monthCommission
             };
-            if (_deposit > 50000) _monthCommission = (_deposit * _highPercent) / 365;
         }
 
-        public override void AccrualOfCommission()
+        public void AccrualOfCommission()
         {
             CashReplenishmentToAccount(_monthCommission);
             _monthCommission = 0;
         }
 
-        public override void CashWithdrawalFromAccount(decimal value)
+        public void CashWithdrawalFromAccount(decimal value)
         {
             if (value < 0) throw new BanksException("Value can't be less then 0");
             _deposit += value;
         }
 
-        public override void CashReplenishmentToAccount(decimal value)
+        public void CashReplenishmentToAccount(decimal value)
         {
             if (value < 0) throw new BanksException("Value can't be less then 0");
             if (_deposit < value) throw new BanksException("You cant replenishment money from deposit");
             _deposit -= value;
         }
 
-        public override Guid GetAccountId() => _accountId;
-        public override decimal GetDeposit() => _deposit;
+        public Guid GetAccountId() => _accountId;
+        public decimal GetDeposit() => _deposit;
     }
 }

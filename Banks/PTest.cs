@@ -11,8 +11,8 @@ namespace Banks
     {
         private static void TMain()
         {
-            var iskander = new Client("Iskander", "Kudashev", "Svoboda 10", "6717637675");
-            var misha = new Client("Misha", "Lipa", "Gde-to v Kupchino", "13371448");
+            var iskander = new Client("Iskander", "Kudashev", "Svoboda 10", 63767511);
+            var misha = new Client("Misha", "Lipa", "Gde-to v Kupchino", 101010220);
             const string name = "Tinkoff";
             const decimal yearPercent = 0.02M;
             const decimal belowFiftyThousandPercent = 0.03M;
@@ -70,7 +70,7 @@ namespace Banks
             AnsiConsole.Write(rule);
 
             var bank2 = bank.GetAccountById(iskanderCredit.GetAccountId());
-            var client2 = bank.GetClientById("13371448");
+            var client2 = bank.GetClientById(101010220);
         }
     }
 }

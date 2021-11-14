@@ -7,7 +7,7 @@ namespace Banks.Entities.ClientModel.Builder
         private string _name;
         private string _surname;
         private string _address;
-        private string _passportId;
+        private int _passportId;
 
         public Client Build()
         {
@@ -51,9 +51,9 @@ namespace Banks.Entities.ClientModel.Builder
             return this;
         }
 
-        public ClientBuilder SetPassport(string passport)
+        public ClientBuilder SetPassport(int passport)
         {
-            if (string.IsNullOrWhiteSpace(passport))
+            if (passport == default)
             {
                 throw new BanksException($"Field {nameof(passport)} is required");
             }

@@ -48,8 +48,9 @@ namespace Banks.Entities
             return account;
         }
 
-        public Client GetClientById(string id)
+        public Client GetClientById(int id)
         {
+            if (id == default) throw new BanksException("Invalid id");
             return _clientAccountsById.Keys.FirstOrDefault(client => client.PassportId == id);
         }
 

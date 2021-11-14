@@ -66,8 +66,8 @@ namespace Banks.Tests
             var bank = new Bank(settings);
             var mainBank = new MainBank();
             mainBank.AddNewBank(bank);
-            var iskander = new Client("Iskander", "Kudashev", "Svoboda 10", "6717637675");
-            var misha = new Client("Misha", "Lipa", "Gde-to v Kupchino", "13371448");
+            var iskander = new Client("Iskander", "Kudashev", "Svoboda 10", 671763767);
+            var misha = new Client("Misha", "Lipa", "Gde-to v Kupchino", 10012223);
             IAccount iskanderCredit = bank.CreateCreditAccount(iskander);
             IAccount iskanderDebit = bank.CreateDebitAccount(iskander);
             IAccount iskanderDeposit = bank.CreateDepositAccount(iskander);
@@ -76,12 +76,12 @@ namespace Banks.Tests
             IAccount mishaDebitAccount = bank.CreateDebitAccount(misha);
             IAccount mishaDepositAccount = bank.CreateDepositAccount(misha);
             
-            Assert.True(bank.GetAllAccounts().Contains(iskanderCredit));
-            Assert.True(bank.GetAllAccounts().Contains(iskanderDebit));
-            Assert.True(bank.GetAllAccounts().Contains(iskanderDeposit));
-            Assert.True(bank.GetAllAccounts().Contains(mishaCreditAccount));
-            Assert.True(bank.GetAllAccounts().Contains(mishaDebitAccount));
-            Assert.True(bank.GetAllAccounts().Contains(mishaDepositAccount));
+            Assert.Contains(iskanderCredit, bank.GetAllAccounts());
+            Assert.Contains(iskanderDebit, bank.GetAllAccounts());
+            Assert.Contains(iskanderDebit, bank.GetAllAccounts());
+            Assert.Contains(mishaCreditAccount, bank.GetAllAccounts());
+            Assert.Contains(mishaDebitAccount, bank.GetAllAccounts());
+            Assert.Contains(mishaDepositAccount, bank.GetAllAccounts());
         }
 
         [Test]
@@ -109,8 +109,8 @@ namespace Banks.Tests
             var bank = new Bank(settings);
             var mainBank = new MainBank();
             mainBank.AddNewBank(bank);
-            var iskander = new Client("Iskander", "Kudashev", "Svoboda 10", "6717637675");
-            var misha = new Client("Misha", "Lipa", "Gde-to v Kupchino", "13371448");
+            var iskander = new Client("Iskander", "Kudashev", "Svoboda 10", 671763767 );
+            var misha = new Client("Misha", "Lipa", "Gde-to v Kupchino", 10012223);
             IAccount iskanderCredit = bank.CreateCreditAccount(iskander);
             IAccount iskanderDebit = bank.CreateDebitAccount(iskander);
             IAccount iskanderDeposit = bank.CreateDepositAccount(iskander);

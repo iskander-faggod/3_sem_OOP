@@ -41,9 +41,9 @@ namespace Banks.Entities
             return _banks.FirstOrDefault(bank => bank.GetBankName() == name);
         }
 
-        public Client GetClientById(string id)
+        public Client GetClientById(int id)
         {
-            if (string.IsNullOrEmpty(id)) throw new BanksException("Invalid client id");
+            if (id == default) throw new BanksException("Invalid client id");
             return _clients.FirstOrDefault(client => client.PassportId == id);
         }
 

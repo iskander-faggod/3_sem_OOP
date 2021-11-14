@@ -19,31 +19,31 @@ namespace Banks.Entities.AccountsModel
             _percent = percent;
         }
 
-        public override void AccountPayoff()
+        public void AccountPayoff()
         {
-            _monthCommission = (_deposit * _percent) / 365;
+            _monthCommission = (_deposit * _percent) / DateTime.Now.Year;
         }
 
-        public override void AccrualOfCommission()
+        public void AccrualOfCommission()
         {
             CashReplenishmentToAccount(_monthCommission);
             _monthCommission = 0;
         }
 
-        public override void CashWithdrawalFromAccount(decimal value)
+        public void CashWithdrawalFromAccount(decimal value)
         {
             if (value < 0) throw new BanksException("Value can't be less then 0");
             if (value > _deposit) throw new BanksException("Value can't be more then deposit");
             _deposit -= value;
         }
 
-        public override void CashReplenishmentToAccount(decimal value)
+        public void CashReplenishmentToAccount(decimal value)
         {
             if (value < 0) throw new BanksException("Value can't be less then 0");
             _deposit += value;
         }
 
-        public override Guid GetAccountId() => _accountId;
-        public override decimal GetDeposit() => _deposit;
+        public Guid GetAccountId() => _accountId;
+        public decimal GetDeposit() => _deposit;
     }
 }

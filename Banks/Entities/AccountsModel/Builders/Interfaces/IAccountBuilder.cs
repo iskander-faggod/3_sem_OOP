@@ -5,15 +5,15 @@ namespace Banks.Entities.AccountsModel.Builders.Interfaces
 {
     public interface IAccountBuilder
     {
-        public IAccount Build();
+         IAccount Build();
 
-        public IAccountBuilder SetAccountId(Guid id);
-        public IAccountBuilder SetLimit(decimal limit);
-        public IAccountBuilder SetUnlockDate(DateTime dateTime);
-        public IAccountBuilder SetPercent(decimal percent);
-        public IAccountBuilder SetCommission(decimal commission);
-        public IAccountBuilder SetLowPercent(decimal lowPercent);
-        public IAccountBuilder SetMiddlePercent(decimal middlePercent);
-        public IAccountBuilder SetHighPercent(decimal highPercent);
+         IAccountBuilder SetAccountId(Guid id);
+         IAccountBuilder SetLimit(decimal limit);
+         IAccountBuilder SetUnlockDate(DateTime dateTime);
+         IAccountBuilder SetPercent(decimal percent);
+         IAccountBuilder SetCommission(decimal commission);
+         IAccountBuilder SetLowPercent(decimal lowPercent);
+         IAccountBuilder SetMiddlePercent(decimal middlePercent);
+         IAccountBuilder SetHighPercent(decimal highPercent);
     }
 }

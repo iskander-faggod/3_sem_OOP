@@ -16,12 +16,9 @@ namespace Banks.Commands
 
         public WithdrawalBankCommand(Guid accountId, decimal amount, IAccount currentAccount)
         {
-            if (accountId == default)
-            {
-                throw new BanksException("Invalid accountId");
-            }
+            if (accountId == default) throw new BanksException("Invalid accountId");
+            if (amount < 0) throw new BanksException("You can't withdrawal negative amounts of funds");
 
-            // todo: AMOUNT > 0
             _accountId = accountId;
             _amount = amount;
             _currentAccount = currentAccount;
