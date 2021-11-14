@@ -12,7 +12,7 @@ namespace Banks.Tests
     {
 
         [Test]
-        public void AddBanksFromMainBank()
+        public void CreateSettings_AddBanksFromMainBank()
         {
             const string name = "Tinkoff";
             const decimal yearPercent = 0.02M;
@@ -42,7 +42,7 @@ namespace Banks.Tests
         }  
         
         [Test]
-        public void AddAccountsToBank()
+        public void AddAccountsToBank_CheckThatAccountsContainsBank()
         {
             const string name = "Tinkoff";
             const decimal yearPercent = 0.02M;
@@ -85,7 +85,7 @@ namespace Banks.Tests
         }
 
         [Test]
-        public void CheckOperations()
+        public void CheckOperations_Withdrawal_Repleshment_Transfer()
         {
             const string name = "Tinkoff";
             const decimal yearPercent = 0.02M;
