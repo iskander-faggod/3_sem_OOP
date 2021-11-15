@@ -1,9 +1,38 @@
-﻿namespace Banks
+﻿using System;
+using System.Collections.Generic;
+using Banks.Commands;
+using Banks.ConsoleInterface;
+using Banks.Entities;
+using Banks.Entities.AccountsModel;
+using Banks.Entities.AccountsModel.Creator;
+using Banks.Entities.ClientModel;
+using Spectre.Console;
+using Spectre.Console.Cli;
+
+namespace Banks
 {
     internal static class Program
     {
-        private static void Main()
+        private static void Main(string[] args)
         {
+            var rule = new Rule("[red]Всем привет! Давайте начнем использовать и создавать банки[/]");
+            AnsiConsole.Write(rule);
+            var app = new CommandApp();
+            app.Configure(config =>
+            {
+                config.AddCommand<CreateMainBank>("createMainBank");
+                config.AddCommand<CreateBank>("createBank");
+                config.AddCommand<CreateClient>("createClient");
+                config.AddCommand<CreateAccount>("createAccount");
+                config.AddCommand<CreateOperations>("createOperations");
+            });
+            app.Run(args);
+            while (true)
+            {
+                string command = Console.ReadLine();
+                AnsiConsole.WriteLine();
+                app.Run(command.Split(' '));
+            }
         }
     }
 }
