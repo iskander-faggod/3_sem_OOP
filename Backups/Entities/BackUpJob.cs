@@ -31,7 +31,7 @@ namespace Backups.Entities
         {
             if (filesToCopy is null) throw new BackupsException("FilesToCopy are null");
             _backUpFiles.AddRange(filesToCopy);
-            var restorePoint = new RestorePoint(this);
+            var restorePoint = new RestorePoint(this, _algorithm);
             _restorePoints.Add(restorePoint);
             _algorithm.SaveFile(this, restorePoint);
             _backUpFiles.Clear();
