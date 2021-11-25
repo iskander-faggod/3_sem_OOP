@@ -31,5 +31,7 @@ namespace Backups.Repositories
                 File.WriteAllBytes(Path.Join(dirPath, "/", $"{name}.zip"), bytes);
             }
         }
+
+        public string GetPath() => _path;
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using Backups.Entities;
 using Backups.Tools;
 using BackupsExtra.Entities;
+using BackupsExtra.Serializer;
 
 namespace BackupsExtra.Algorithms
 {
@@ -35,5 +36,8 @@ namespace BackupsExtra.Algorithms
                 extraBackupJob.DeleteRestorePoint(point);
             }
         }
+
+        public IClearLimitSnapShot ToSnapshot() => new ClearByCountSnapShot()
+            { CountRestorePoints = _countRestorePoints };
     }
 }

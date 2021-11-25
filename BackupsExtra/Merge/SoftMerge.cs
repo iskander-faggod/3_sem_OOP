@@ -12,7 +12,7 @@ namespace BackupsExtra.Merge
             extraBackupJob.AddPoint(files);
             RestorePoint newPoint = extraBackupJob.GetLastRestorePoint();
             var pointsToMerge = extraBackupJob.GetAlgorithm().FindPointsToClear(extraBackupJob).ToList();
-            foreach (RestorePoint point in pointsToMerge)
+            foreach (RestorePoint point in pointsToMerge.Where(point => !point.Equals(newPoint)))
             {
                 extraBackupJob.MergeRestorePoints(point, newPoint);
             }

@@ -4,7 +4,7 @@ using BackupsExtra.Entities;
 
 namespace BackupsExtra.Merge
 {
-    public class HardMerge
+    public class HardMerge : IMergeInstruction
     {
         public void AddPoint(ExtraBackupJob extraBackupJob, List<FileDescription> files)
         {
