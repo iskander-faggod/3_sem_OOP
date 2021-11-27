@@ -7,6 +7,7 @@ using Backups.Repositories;
 using BackupsExtra.Algorithms;
 using BackupsExtra.Entities;
 using BackupsExtra.Merge;
+using BackupsExtra.Resotrer;
 using BackupsExtra.Serializer;
 using BackupsExtra.Settings;
 using Newtonsoft.Json;
@@ -48,16 +49,16 @@ namespace BackupsExtra
                 TypeNameHandling = TypeNameHandling.Auto,
                 Formatting = Formatting.Indented,
             };
-            File.WriteAllText(
-                "state.json",
-                JsonConvert.SerializeObject(
-                    new BackupSettingsSnapShot
-                    {
-                        MergeInstruction = backupExtraSettings.GetMergeInstruction(),
-                        ClearLimitSnapShot = backupExtraSettings.GetExtraAlgorithm().ToSnapshot(),
-                    }, serializerSettings));
-            var settingsSnapshot = JsonConvert.DeserializeObject<BackupSettingsSnapShot>(File.ReadAllText("state.json"), serializerSettings);
-            var newBackupExtraSettings = settingsSnapshot.ToObject();
+
+            var serializer = new MainSerializer<BackupSettingsSnapShot>("extract.json", new BackupSettingsSnapShot
+            {
+                MergeInstruction = backupExtraSettings.GetMergeInstruction(),
+                ClearLimitSnapShot = backupExtraSettings.GetExtraAlgorithm().ToSnapshot(),
+            });
+            serializer.Save();
+            serializer.Load();
+
+            var newBackupExtraSettings = serializer.Load().ToObject();
             var extraBackupJob = new ExtraBackupJob(
                 "BackupExtraJOBA",
                 new SingleStorage(),
@@ -66,6 +67,8 @@ namespace BackupsExtra
             extraBackupJob.AddRestorePoint(files_2);
             repository.CreateRepository(extraBackupJob, files_1);
             repository.CreateRepository(extraBackupJob, files_2);
+            var restorer = new Restorer(extraBackupJob.GetLastRestorePoint(), files_2);
+            restorer.Restore();
         }
     }
 }
