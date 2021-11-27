@@ -29,8 +29,6 @@ namespace BackupsExtra
                 .CreateLogger();
             Logger.Logger.SetLogger(logger);
 
-            logger.Information("test");
-            Logger.Logger.Log("test3");
             var repositoryPath = Pwd + "1_Repository";
             var repository = new FilesRepository(repositoryPath);
             var file1 = new FileDescription("file1.txt", Pwd + "Source/");

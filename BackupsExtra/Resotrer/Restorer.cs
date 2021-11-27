@@ -40,7 +40,7 @@ namespace BackupsExtra.Resotrer
             }
             catch (Exception)
             {
-                Logger.Logger.Log($"{fullName} was already exist");
+                Logger.Logger.Log($"{fullName} is already exist");
             }
         }
     }

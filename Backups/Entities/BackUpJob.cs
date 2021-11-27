@@ -42,9 +42,6 @@ namespace Backups.Entities
         public void RemovePoint(RestorePoint restorePoint)
         {
             if (restorePoint is null) throw new BackupsException("RestorePoint is invalid");
-            /*
-            if (_restorePoints.Contains(restorePoint)) throw new BackupsException("RestoreFile is already exist");
-            */
             _restorePoints.Remove(restorePoint);
         }
 
