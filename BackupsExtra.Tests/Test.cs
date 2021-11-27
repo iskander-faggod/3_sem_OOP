@@ -22,7 +22,7 @@ namespace BackupsExtra.Tests
         private static readonly string sourcePath = "/home/iskander/Desktop/iskander-faggod/BackupsExtra/"; 
 
 
-        [Test]
+        [Test] [Ignore("FileSystem doesn't work in GitHub CI")]
         public void AddFiles_UseClearAlgorithms_CheckForPoints()
         {
             var logger = new LoggerConfiguration()
