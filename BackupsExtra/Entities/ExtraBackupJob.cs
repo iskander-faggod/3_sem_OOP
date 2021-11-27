@@ -7,6 +7,7 @@ using Backups.Tools;
 using BackupsExtra.Algorithms;
 using BackupsExtra.Logger;
 using BackupsExtra.Merge;
+using BackupsExtra.Serializer;
 using BackupsExtra.Settings;
 
 namespace BackupsExtra.Entities
@@ -73,6 +74,7 @@ namespace BackupsExtra.Entities
         }
 
         public IExtraAlgorithm GetAlgorithm() => _settings.GetExtraAlgorithm();
+
         public IMergeInstruction GetInstruction() => _settings.GetMergeInstruction();
 
         public void SetAlgorithm(IExtraAlgorithm algorithm)
@@ -84,5 +86,8 @@ namespace BackupsExtra.Entities
         {
             _mergeInstruction = instruction;
         }
+
+        public BackupJobSnapShot ToSnapshot() => new BackupJobSnapShot()
+            { Algorithm = this.GetBackUpAlgorithmType(), BackUpName = this.GetBackUpName(), Settings = _settings };
     }
 }
