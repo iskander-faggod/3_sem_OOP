@@ -19,7 +19,7 @@ namespace Banks.Tests
             const decimal belowFiftyThousandPercent = 0.03M;
             const decimal betweenFiftyAndHundredThousandPercent = 0.04M;
             const decimal aboveHundredThousandPercent = 0.05M;
-            var depositUnlockDate = new DateTime(2021, 11, 20);
+            var depositUnlockDate = new DateTime(2021, 12, 30);
             const decimal transferLimit = -10000;
             const decimal commission = 300;
             
@@ -49,7 +49,7 @@ namespace Banks.Tests
             const decimal belowFiftyThousandPercent = 0.03M;
             const decimal betweenFiftyAndHundredThousandPercent = 0.04M;
             const decimal aboveHundredThousandPercent = 0.05M;
-            var depositUnlockDate = new DateTime(2021, 11, 20);
+            var depositUnlockDate = new DateTime(2021, 12, 30);
             const decimal transferLimit = -10000;
             const decimal commission = 300;
             
@@ -92,7 +92,7 @@ namespace Banks.Tests
             const decimal belowFiftyThousandPercent = 0.03M;
             const decimal betweenFiftyAndHundredThousandPercent = 0.04M;
             const decimal aboveHundredThousandPercent = 0.05M;
-            var depositUnlockDate = new DateTime(2021, 11, 20);
+            var depositUnlockDate = new DateTime(2021, 12, 30);
             const decimal transferLimit = -10000;
             const decimal commission = 300;
 
