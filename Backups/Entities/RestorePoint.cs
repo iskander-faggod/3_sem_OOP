@@ -17,7 +17,7 @@ namespace Backups.Entities
         public RestorePoint(BackUpJob backUpJob, IAlgorithm backupAlgorithm)
         {
             _backUpJob = backUpJob ?? throw new BackupsException("BackUpJob is invalid");
-            _backupAlgorithm = backupAlgorithm;
+            _backupAlgorithm = backupAlgorithm ?? throw new BackupsException("BackUp Algorithm is invalid");
             _storages = new List<Storage>();
             _creationTime = DateTime.Now;
         }

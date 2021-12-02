@@ -38,9 +38,9 @@ namespace BackupsExtra.Resotrer
 
                 Logger.Logger.Log($"{fullName} was restored");
             }
-            catch (Exception)
+            catch (Exception error)
             {
-                Logger.Logger.Log($"{fullName} is already exist");
+                Logger.Logger.Log($"Invalid operation | {error}");
             }
         }
     }

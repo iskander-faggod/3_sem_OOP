@@ -38,6 +38,8 @@ namespace BackupsExtra.Algorithms
         }
 
         public IClearLimitSnapShot ToSnapshot() => new ClearByCountSnapShot()
-            { CountRestorePoints = _countRestorePoints };
+        {
+            CountRestorePoints = _countRestorePoints,
+        };
     }
 }

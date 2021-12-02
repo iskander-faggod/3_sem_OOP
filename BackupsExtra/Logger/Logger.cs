@@ -5,16 +5,16 @@ namespace BackupsExtra.Logger
 {
     public class Logger
     {
-        private static ILogger _consoleLogger;
+        private static ILogger _logger;
 
-        public static void SetLogger(ILogger consoleLogger)
+        public static void SetLogger(ILogger logger)
         {
-            _consoleLogger = consoleLogger ?? throw new BackupsException("Invalid consoleLogger");
+            _logger = logger ?? throw new BackupsException("Invalid logger");
         }
 
         public static void Log(string text)
         {
-           _consoleLogger.Information(text);
+           _logger.Information(text);
         }
     }
 }

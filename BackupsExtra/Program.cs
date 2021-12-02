@@ -48,7 +48,7 @@ namespace BackupsExtra
                 Formatting = Formatting.Indented,
             };
 
-            var serializer = new MainSerializer<BackupSettingsSnapShot>("extract.json", new BackupSettingsSnapShot
+            var serializer = new Serializer<BackupSettingsSnapShot>("extract.json", new BackupSettingsSnapShot
             {
                 MergeInstruction = backupExtraSettings.GetMergeInstruction(),
                 ClearLimitSnapShot = backupExtraSettings.GetExtraAlgorithm().ToSnapshot(),

@@ -88,6 +88,10 @@ namespace BackupsExtra.Entities
         }
 
         public BackupJobSnapShot ToSnapshot() => new BackupJobSnapShot()
-            { Algorithm = this.GetBackUpAlgorithmType(), BackUpName = this.GetBackUpName(), Settings = _settings };
+        {
+            Algorithm = this.GetBackUpAlgorithmType(),
+            BackUpName = this.GetBackUpName(),
+            Settings = _settings,
+        };
     }
 }

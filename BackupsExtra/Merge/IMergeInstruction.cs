@@ -6,6 +6,6 @@ namespace BackupsExtra.Merge
 {
     public interface IMergeInstruction
     {
-        public void AddPoint(ExtraBackupJob extraBackupJob, List<FileDescription> files);
+        void AddPoint(ExtraBackupJob extraBackupJob, List<FileDescription> files);
     }
 }

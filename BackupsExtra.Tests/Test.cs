@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Backups.Algorithms;
 using Backups.Entities;
 using Backups.Repositories;
@@ -19,7 +20,7 @@ namespace BackupsExtra.Tests
         private static readonly DirectoryInfo RuntimeDir = Directory.GetParent(Environment.CurrentDirectory);
         private static readonly string Pwd = RuntimeDir?.Parent?.Parent?.FullName + '/';
         private static readonly string BackupsPath = RuntimeDir?.Parent?.Parent?.Parent?.FullName + '/';
-        private static readonly string sourcePath = "/home/iskander/Desktop/iskander-faggod/BackupsExtra/"; 
+        private static readonly string sourcePath = "/home/iskander/Desktop/iskander-faggod/BackupsExtra/";
 
 
         public void AddFiles_UseClearAlgorithms_CheckForPoints()
@@ -29,7 +30,7 @@ namespace BackupsExtra.Tests
                 .WriteTo.Console()
                 .CreateLogger();
             Logger.Logger.SetLogger(logger);
-            
+
             string repositoryPath = Pwd + "Test_Repo";
             var repository = new FilesRepository(repositoryPath);
             var file1 = new FileDescription("file1.txt", sourcePath + "Source/");
@@ -51,8 +52,8 @@ namespace BackupsExtra.Tests
             extraBackupJob.AddRestorePoint(files2);
             repository.CreateRepository(extraBackupJob, files1);
             repository.CreateRepository(extraBackupJob, files2);
-            Assert.True(extraBackupJob.GetBackUpFiles().Count == 0);
-            Assert.True(extraBackupJob.GetRestorePoints()[0].GetStorages().Count == 4);
+            Assert.Equals(extraBackupJob.GetBackUpFiles().Count, 0);
+            Assert.Equals(extraBackupJob.GetRestorePoints().First().GetStorages().Count, 4);
         }
     }
 }

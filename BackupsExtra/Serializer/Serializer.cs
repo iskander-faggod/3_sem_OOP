@@ -4,9 +4,9 @@ using Newtonsoft.Json;
 
 namespace BackupsExtra.Serializer
 {
-    public class MainSerializer<T>
+    public class Serializer<T>
     {
-        private string _jsonFIlePath;
+        private string _jsonFilePath;
         private T _serializeObject;
 
         private JsonSerializerSettings _serializerSettings = new JsonSerializerSettings()
@@ -15,18 +15,18 @@ namespace BackupsExtra.Serializer
             Formatting = Formatting.Indented,
         };
 
-        public MainSerializer(string jsonFIlePath, T serializeObject)
+        public Serializer(string jsonFilePath, T serializeObject)
         {
-            if (string.IsNullOrWhiteSpace(jsonFIlePath)) throw new BackupsException("Invalid path to json");
+            if (string.IsNullOrWhiteSpace(jsonFilePath)) throw new BackupsException("Invalid path to json");
             if (serializeObject is null) throw new BackupsException("invalid object");
-            _jsonFIlePath = jsonFIlePath;
+            _jsonFilePath = jsonFilePath;
             _serializeObject = serializeObject;
         }
 
         public void Save()
         {
             File.WriteAllText(
-                _jsonFIlePath,
+                _jsonFilePath,
                 JsonConvert.SerializeObject(
                     _serializeObject, _serializerSettings));
         }
@@ -34,7 +34,7 @@ namespace BackupsExtra.Serializer
         public T Load()
         {
             return JsonConvert.DeserializeObject<T>(
-                File.ReadAllText(_jsonFIlePath),
+                File.ReadAllText(_jsonFilePath),
                 _serializerSettings);
         }
     }
