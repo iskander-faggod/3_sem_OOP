@@ -13,6 +13,7 @@ namespace ReportsApi.Context
 
         public DbSet<WorkTask> WorkTasks { get; set; } = null!;
         public DbSet<Employee> Employees { get; set; } = null!;
+        public DbSet<Report> Reports { get; set; } = null;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -22,9 +23,10 @@ namespace ReportsApi.Context
             modelBuilder.Entity<WorkTask>()
                 .HasOne<Employee>(x => x.Executor)
                 .WithMany(x => x.Tasks);
+            modelBuilder.Entity<Report>().HasOne<Employee>(x => x.Writer);
             base.OnModelCreating(modelBuilder);
         }
-
+ 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
         }

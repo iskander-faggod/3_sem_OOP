@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -13,6 +14,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
+using ReportsApi.Auth;
 using ReportsApi.Context;
 using ReportsApi.Services;
 
@@ -24,7 +26,6 @@ namespace ReportsApi
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            
         }
 
         public IConfiguration Configuration { get; }
@@ -35,10 +36,10 @@ namespace ReportsApi
             services
                 .AddControllers()
                 .AddNewtonsoftJson(options =>
-            {
-                options.SerializerSettings.Formatting = Formatting.Indented;
-            });
-            
+                {
+                    options.SerializerSettings.Formatting = Formatting.Indented;
+                });
+
             services.AddDbContext<ReportsDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("postgresConnect")));
 
@@ -46,10 +47,12 @@ namespace ReportsApi
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ReportsApi", Version = "v1" });
             });
-            services.AddScoped<IEmployeeService, EmployeeService>();
+            services
+                .AddAuthentication("EmployeeAuthorization")
+                .AddScheme<AuthenticationSchemeOptions, EmployeeAuthenticationHandler>("EmployeeAuthorization", null);            services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddScoped<IWorkTaskService, WorkTaskService>();
         }
-        
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -64,8 +67,9 @@ namespace ReportsApi
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
-
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

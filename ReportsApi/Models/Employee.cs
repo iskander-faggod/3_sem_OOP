@@ -27,7 +27,8 @@ namespace ReportsApi.Models
             string surname,
             string positionName,
             Guid leaderId,
-            Guid teamLeaderId
+            Guid teamLeaderId,
+            List<WorkTask> tasks
         )
         {
             if (employeeId == Guid.Empty) throw new ArgumentException("employeeId is invalid", nameof(employeeId));
@@ -45,6 +46,7 @@ namespace ReportsApi.Models
             PositionName = positionName;
             LeaderId = leaderId;
             TeamLeaderId = teamLeaderId;
+            Tasks = tasks ?? throw new ArgumentException($"{nameof(tasks)} is invalid");
         }
     }
 
