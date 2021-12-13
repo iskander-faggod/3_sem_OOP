@@ -1,3 +1,4 @@
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using ReportsApi.Models;
 
@@ -18,12 +19,12 @@ namespace ReportsApi.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Employee>()
-                .HasMany<WorkTask>(x => x.Tasks)
-                .WithOne(x => x.Executor);
-            modelBuilder.Entity<WorkTask>()
-                .HasOne<Employee>(x => x.Executor)
-                .WithMany(x => x.Tasks);
-            modelBuilder.Entity<Report>().HasOne<Employee>(x => x.Writer);
+                .HasMany(x => x.Tasks)
+                .WithOne(x => x.Executor)
+                .HasForeignKey(x => x.ExecutorId);
+
+            modelBuilder.Entity<Report>()
+                .HasOne(x => x.Writer);
             base.OnModelCreating(modelBuilder);
         }
  

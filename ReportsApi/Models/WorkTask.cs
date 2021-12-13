@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
 namespace ReportsApi.Models
@@ -11,26 +12,24 @@ namespace ReportsApi.Models
         public TaskType TaskState { get; set; }
         public DateTime TaskEditTime { get; set; }
         public DateTime TaskCreationTime { get; set; } = DateTime.Now;
+        public Guid ExecutorId { get; set; }
         public Employee Executor { get; set; }
         public string Comment { get; set; }
 
         private WorkTask(){}
         public WorkTask
         (
-            Guid taskId,
             TaskType taskState,
             DateTime taskEditTime,
-            Employee executor,
+            Guid executorId,
             string comment
         )
         {
-            if (taskId == Guid.Empty) throw new ArgumentException("taskId is invalid", nameof(taskId));
-            if (taskEditTime < TaskCreationTime) throw new ArgumentException("taskEditTime is invalid", nameof(taskEditTime));
             if (string.IsNullOrWhiteSpace(comment)) throw new ArgumentException("comment is invalid", nameof(comment));
-            TaskId = taskId;
+            TaskId = new Guid();
             TaskState = taskState;
             TaskEditTime = taskEditTime;
-            Executor = executor ?? throw new ArgumentException("executor is invalid", nameof(executor));
+            ExecutorId = executorId;
             Comment = comment;
         }
     }

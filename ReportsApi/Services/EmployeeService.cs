@@ -32,7 +32,8 @@ namespace ReportsApi.Services
         public async Task<Employee> FindByNameAndSurname(string name, string surname)
         {
             Employee employee =
-                await _context.Employees.FirstOrDefaultAsync(x => x.Name == name && x.Surname == surname);
+                await _context.Employees
+                    .FirstOrDefaultAsync(x => x.Name == name && x.Surname == surname);
             await _context.SaveChangesAsync();
             return employee;
         }
@@ -46,7 +47,8 @@ namespace ReportsApi.Services
 
         public async Task PutEmployee(Employee employee)
         {
-            _context.Entry(employee).State = EntityState.Modified;
+            Employee currentEmployee = await _context.Employees.FindAsync(employee);
+            _context.Entry(currentEmployee).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
 
@@ -61,7 +63,6 @@ namespace ReportsApi.Services
         {
             Employee employee = await _context.Employees.FindAsync(id);
             if (employee is null) throw new ArgumentException(nameof(employee) + "is invalid");
-            employee.EmployeeId = entity.EmployeeId;
             employee.Name = entity.Name;
             employee.Surname = entity.Surname;
             employee.LeaderId = entity.LeaderId;

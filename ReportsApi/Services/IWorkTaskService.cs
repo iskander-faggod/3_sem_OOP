@@ -17,7 +17,7 @@ namespace ReportsApi.Services
 
         Task<WorkTask> GetTaskByDate(DateTime dateTime);
 
-        Task<WorkTask> GetTaskByEmployee(Employee employee);
+        Task<WorkTask> GetTaskByEmployeeId(Guid employeeId);
 
         List<WorkTask> GetUnchangedTasks();
 
@@ -25,7 +25,7 @@ namespace ReportsApi.Services
 
         Task<WorkTask> UploadTaskComment(Guid id, string comment);
 
-        Task<WorkTask> ChangeTaskExecutor(Guid id, Employee employee);
+        Task<WorkTask> ChangeTaskExecutor(Guid taskId, Guid employeeId);
 
         List<WorkTask> GetTaskByExecutorRole(EmployeeType role);
 

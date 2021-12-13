@@ -49,7 +49,8 @@ namespace ReportsApi
             });
             services
                 .AddAuthentication("EmployeeAuthorization")
-                .AddScheme<AuthenticationSchemeOptions, EmployeeAuthenticationHandler>("EmployeeAuthorization", null);            services.AddScoped<IEmployeeService, EmployeeService>();
+                .AddScheme<AuthenticationSchemeOptions, EmployeeAuthenticationHandler>("EmployeeAuthorization", null);           
+            services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddScoped<IWorkTaskService, WorkTaskService>();
         }
 

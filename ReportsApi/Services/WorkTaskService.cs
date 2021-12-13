@@ -49,11 +49,11 @@ namespace ReportsApi.Services
                 .FirstOrDefaultAsync(x => x.TaskCreationTime == dateTime);
             return workTask;
         }
-
-        public async Task<WorkTask> GetTaskByEmployee(Employee employee)
+        
+        public async Task<WorkTask> GetTaskByEmployeeId(Guid employeeId)
         {
             WorkTask workTask = await _context.WorkTasks
-                .FirstOrDefaultAsync(x => x.Executor == employee);
+                .FirstOrDefaultAsync(x => x.ExecutorId == employeeId);
             return workTask;
         }
 
@@ -82,20 +82,21 @@ namespace ReportsApi.Services
             return workTask;
         }
 
-        public async Task<WorkTask> ChangeTaskExecutor(Guid id, Employee employee)
+        public async Task<WorkTask> ChangeTaskExecutor(Guid taskId, Guid employeeId)
         {
-            WorkTask workTask = await _context.WorkTasks.FindAsync(id);
+            WorkTask workTask = await _context.WorkTasks.FindAsync(taskId);
             if (workTask is null) throw new ArgumentException(nameof(workTask) + "is invalid");
-            workTask.Executor = employee;
+            workTask.ExecutorId = employeeId;
             await _context.SaveChangesAsync();
             return workTask;
         }
 
         public List<WorkTask> GetTaskByExecutorRole(EmployeeType role)
         {
-            var tasks = _context.WorkTasks
-                .Where(x => x.Executor.Type == role).ToList();
-            return tasks;
+            var executors = _context.Employees
+                .Where(x => x.Type == role)
+                .ToList();
+            return executors.Select(executor => executor.Tasks).FirstOrDefault();
         }
 
         public bool WorkTaskExists(Guid id)
