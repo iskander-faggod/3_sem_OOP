@@ -13,6 +13,7 @@ namespace ReportsApi.Models
         public DateTime TaskEditTime { get; set; }
         public DateTime TaskCreationTime { get; set; } = DateTime.Now;
         public Guid ExecutorId { get; set; }
+        public Guid ReportId { get; set; }
         public Employee Executor { get; set; }
         public string Comment { get; set; }
 
@@ -22,6 +23,7 @@ namespace ReportsApi.Models
             TaskType taskState,
             DateTime taskEditTime,
             Guid executorId,
+            Guid reportId, 
             string comment
         )
         {
@@ -31,6 +33,7 @@ namespace ReportsApi.Models
             TaskEditTime = taskEditTime;
             ExecutorId = executorId;
             Comment = comment;
+            ReportId = reportId;
         }
     }
     public enum TaskType

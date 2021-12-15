@@ -22,9 +22,6 @@ namespace ReportsApi.Context
                 .HasMany(x => x.Tasks)
                 .WithOne(x => x.Executor)
                 .HasForeignKey(x => x.ExecutorId);
-
-            modelBuilder.Entity<Report>()
-                .HasOne(x => x.Writer);
             base.OnModelCreating(modelBuilder);
         }
  
