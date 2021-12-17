@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using ReportsApi.Models;
 
-namespace ReportsApi.Services
+namespace ReportsApi.Services.IServices
 {
     public interface IEmployeeService
     {

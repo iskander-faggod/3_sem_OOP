@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ReportsApi.Context;
+using ReportsApi.Extensions;
 using ReportsApi.Models;
+using ReportsApi.Services.IServices;
 
 namespace ReportsApi.Services
 {
@@ -54,7 +56,26 @@ namespace ReportsApi.Services
             _context.Reports.Remove(report);
             await _context.SaveChangesAsync();
         }
+
+        public Task<List<WorkTask>> GetTasksForAWeek()
+        {
+            DateTime startOfWeek = DateTime.Now.StartOfWeek();
+            var workTasks =  _context.WorkTasks
+                .Where(task =>
+                task.TaskCreationTime >= startOfWeek && task.TaskCreationTime <= DateTime.Now)
+                .ToList();
+            if (workTasks is null) throw new ArgumentException($"{nameof(workTasks)} is null");
+            return Task.FromResult(workTasks);
+        }
         
+        public async Task AddNewTaskInReport(Guid reportId, Guid taskId)
+        {
+            WorkTask task = await _context.WorkTasks.FindAsync(taskId);
+            Report report = await _context.Reports.FindAsync(reportId);
+            if (task is null) throw new ArgumentException($"{nameof(task)} is null");
+            report.TasksId.Add(taskId);
+        }
+
         private bool ReportExists(Guid id)
         {
             return _context.Reports.Any(e => e.ReportId == id);

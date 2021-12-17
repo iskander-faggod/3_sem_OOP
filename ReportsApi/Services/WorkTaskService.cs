@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ReportsApi.Context;
 using ReportsApi.Models;
+using ReportsApi.Services.IServices;
 
 namespace ReportsApi.Services
 {

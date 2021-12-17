@@ -17,6 +17,7 @@ using Newtonsoft.Json;
 using ReportsApi.Auth;
 using ReportsApi.Context;
 using ReportsApi.Services;
+using ReportsApi.Services.IServices;
 
 
 namespace ReportsApi
