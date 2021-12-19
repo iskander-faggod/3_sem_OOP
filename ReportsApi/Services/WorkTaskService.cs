@@ -18,8 +18,11 @@ namespace ReportsApi.Services
             _context = context;
         }
 
-        public async Task Create(WorkTask workTask)
+        public async Task Create(Guid id, WorkTask workTask)
         {
+            Employee employee = await _context.Employees
+                .FirstOrDefaultAsync(x => x.EmployeeId == id);
+            workTask.Executor = employee;
             _context.WorkTasks.Add(workTask);
             await _context.SaveChangesAsync();
         }
@@ -51,13 +54,6 @@ namespace ReportsApi.Services
             return workTask;
         }
         
-        public async Task<WorkTask> GetTaskByEmployeeId(Guid employeeId)
-        {
-            WorkTask workTask = await _context.WorkTasks
-                .FirstOrDefaultAsync(x => x.ExecutorId == employeeId);
-            return workTask;
-        }
-
         public List<WorkTask> GetUnchangedTasks()
         {
             var workTasks =  _context.WorkTasks
@@ -79,15 +75,6 @@ namespace ReportsApi.Services
             WorkTask workTask = await _context.WorkTasks.FindAsync(id);
             if (workTask is null) throw new ArgumentException(nameof(workTask) + "is invalid");
             workTask.Comment = comment;
-            await _context.SaveChangesAsync();
-            return workTask;
-        }
-
-        public async Task<WorkTask> ChangeTaskExecutor(Guid taskId, Guid employeeId)
-        {
-            WorkTask workTask = await _context.WorkTasks.FindAsync(taskId);
-            if (workTask is null) throw new ArgumentException(nameof(workTask) + "is invalid");
-            workTask.ExecutorId = employeeId;
             await _context.SaveChangesAsync();
             return workTask;
         }

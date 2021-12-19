@@ -20,8 +20,10 @@ namespace ReportsApi.Context
         {
             modelBuilder.Entity<Employee>()
                 .HasMany(x => x.Tasks)
-                .WithOne(x => x.Executor)
-                .HasForeignKey(x => x.ExecutorId);
+                .WithOne(x => x.Executor);
+
+            modelBuilder.Entity<Report>()
+                .HasMany(x => x.Tasks);
             base.OnModelCreating(modelBuilder);
         }
  

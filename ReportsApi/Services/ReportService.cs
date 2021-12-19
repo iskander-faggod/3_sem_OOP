@@ -37,8 +37,8 @@ namespace ReportsApi.Services
             Report foundedReport = await _context.Reports.FindAsync(id);
             if (foundedReport is null) throw new ArgumentException(nameof(foundedReport) + "is invalid");
             foundedReport.ReportId = report.ReportId;
-            foundedReport.TasksId = report.TasksId;
-            foundedReport.WriterId = report.WriterId;
+            foundedReport.Tasks = report.Tasks;
+            foundedReport.Writer = report.Writer;
             await _context.SaveChangesAsync();
             return foundedReport;
         }
@@ -68,12 +68,11 @@ namespace ReportsApi.Services
             return Task.FromResult(workTasks);
         }
         
-        public async Task AddNewTaskInReport(Guid reportId, Guid taskId)
+        public async Task AddNewTaskInReport(Guid reportId, WorkTask task)
         {
-            WorkTask task = await _context.WorkTasks.FindAsync(taskId);
             Report report = await _context.Reports.FindAsync(reportId);
             if (task is null) throw new ArgumentException($"{nameof(task)} is null");
-            report.TasksId.Add(taskId);
+            report.Tasks.Add(task);
         }
 
         private bool ReportExists(Guid id)

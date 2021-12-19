@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ReportsApi.DTO;
 using ReportsApi.Models;
 
 namespace ReportsApi.Services.IServices
@@ -15,11 +16,13 @@ namespace ReportsApi.Services.IServices
 
         Task Delete(Guid id);
 
-        Task<Employee> Update(Guid id, Employee entity);
+        Task<Employee> Update(EmployeeDTO entity);
 
         Task<List<Employee>> FindAllEmployees();
 
         Task PutEmployee(Employee employee);
+
+        Task AddTask(Guid id, WorkTask task);
 
         bool Exist(Guid id);
     }

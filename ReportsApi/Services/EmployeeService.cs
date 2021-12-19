@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ReportsApi.Context;
+using ReportsApi.DTO;
 using ReportsApi.Models;
 using ReportsApi.Services.IServices;
 
@@ -20,11 +21,10 @@ namespace ReportsApi.Services
 
         public async Task<Employee> Create(Employee employee)   
         {
-            await _context.AddAsync(employee);
+            await _context.Employees.AddAsync(employee);
             await _context.SaveChangesAsync();
             return employee;
         }
-
         public async Task<List<Employee>> FindAllEmployees()
         {
             return await _context.Employees.ToListAsync();
@@ -53,6 +53,14 @@ namespace ReportsApi.Services
             await _context.SaveChangesAsync();
         }
 
+        public async Task AddTask(Guid id, WorkTask task)
+        {
+            Employee currentEmployee = await _context.Employees.FindAsync(id);
+            task.Executor = currentEmployee;
+            task.Executor.EmployeeId = currentEmployee.EmployeeId;
+            await _context.SaveChangesAsync();
+        }
+
         public async Task Delete(Guid id)
         {
             Employee employee = await _context.Employees.FindAsync(id);
@@ -60,9 +68,9 @@ namespace ReportsApi.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<Employee> Update(Guid id, Employee entity)
+        public async Task<Employee> Update(EmployeeDTO entity)
         {
-            Employee employee = await _context.Employees.FindAsync(id);
+            Employee employee = await _context.Employees.FindAsync(entity.Id);
             if (employee is null) throw new ArgumentException(nameof(employee) + "is invalid");
             employee.Name = entity.Name;
             employee.Surname = entity.Surname;

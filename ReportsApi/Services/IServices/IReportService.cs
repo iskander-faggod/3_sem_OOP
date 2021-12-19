@@ -18,7 +18,7 @@ namespace ReportsApi.Services.IServices
 
         Task<List<WorkTask>> GetTasksForAWeek();
 
-        Task AddNewTaskInReport(Guid reportId, Guid taskId);
+        Task AddNewTaskInReport(Guid reportId, WorkTask task);
 
         Task Delete(Guid id);
     }
