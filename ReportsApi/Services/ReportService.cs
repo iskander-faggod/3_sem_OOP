@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ReportsApi.Context;
+using ReportsApi.DTO;
 using ReportsApi.Extensions;
 using ReportsApi.Models;
 using ReportsApi.Services.IServices;
@@ -31,12 +32,11 @@ namespace ReportsApi.Services
             if (report is null) throw new ArgumentNullException($"{nameof(report)} is null");
             return report;
         }
-
-        public async Task<Report> UpdateReport(Guid id, Report report)
+        
+        public async Task<Report> UpdateReport(ReportDTO report)
         {
-            Report foundedReport = await _context.Reports.FindAsync(id);
+            Report foundedReport = await _context.Reports.FindAsync(report.Id);
             if (foundedReport is null) throw new ArgumentException(nameof(foundedReport) + "is invalid");
-            foundedReport.ReportId = report.ReportId;
             foundedReport.Tasks = report.Tasks;
             foundedReport.Writer = report.Writer;
             await _context.SaveChangesAsync();
@@ -68,11 +68,19 @@ namespace ReportsApi.Services
             return Task.FromResult(workTasks);
         }
         
-        public async Task AddNewTaskInReport(Guid reportId, WorkTask task)
+        public async Task AddNewTaskInReport(Guid reportId, TaskDTO task)
         {
             Report report = await _context.Reports.FindAsync(reportId);
             if (task is null) throw new ArgumentException($"{nameof(task)} is null");
-            report.Tasks.Add(task);
+            var newTask = new WorkTask()
+            {
+                Comment = task.Comment,
+                TaskCreationTime = DateTime.Now,
+                TaskEditTime = DateTime.Now,
+                TaskId = task.Id,
+                TaskState = task.TaskState,
+            };
+            report.Tasks.Add(newTask);
         }
 
         private bool ReportExists(Guid id)
