@@ -54,6 +54,7 @@ namespace ReportsApi.Controllers
             var newReport = new Report()
             {
                 ReportId = Guid.NewGuid(),
+                Writer = report.Writer
             };
              await _reportService.Create(newReport);
         }
